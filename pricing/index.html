@@ -1,1 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pricing — gnoke-skins</title>
+  <meta name="description" content="MIT-licensed skin templates, free forever. Pay only for a custom skin built to your spec. One config.js connects any device.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Fraunces:opsz,wght@9..144,400;9..144,700;9..144,800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../theme.css">
+  <style>
+    /* ── Pricing cards ─────────────────────────────────── */
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1rem;
+      margin-top: 2.5rem;
+      align-items: start;
+    }
+    .price-card {
+      border: 0.5px solid var(--border);
+      border-radius: var(--rlg);
+      padding: 2rem 1.75rem;
+      background: var(--bg2);
+      transition: border-color 0.2s;
+    }
+    .price-card.hot {
+      border-color: var(--accent);
+      background: rgba(91, 164, 207, 0.05);
+    }
+    .price-tier {
+      font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--text3); margin-bottom: 1rem;
+      display: flex; align-items: center; gap: 0.5rem;
+    }
+    .price-badge {
+      background: var(--accent); color: #1a2035;
+      font-size: 9px; letter-spacing: 0.1em; font-weight: 600;
+      padding: 2px 7px; border-radius: 3px; text-transform: uppercase;
+    }
+    .price-amt {
+      font-family: var(--serif);
+      font-size: 3rem; font-weight: 700; line-height: 1;
+      letter-spacing: -0.02em;
+    }
+    .price-per { font-size: 11px; color: var(--text3); margin-top: 5px; }
+    .price-div { border: none; border-top: 0.5px solid var(--border); margin: 1.5rem 0; }
+    .price-feat {
+      font-size: 0.8rem; color: var(--text2);
+      padding: 0.3rem 0; display: flex; align-items: flex-start; gap: 0.6rem;
+    }
+    .price-feat::before { content: '→'; color: var(--accent); flex-shrink: 0; font-weight: 600; margin-top: 1px; }
+    .price-feat.off { color: var(--text3); }
+    .price-feat.off::before { content: '—'; color: var(--text3); }
+    .price-card .btn { width: 100%; justify-content: center; margin-top: 1.5rem; }
 
+    /* ── Comparison table ──────────────────────────────── */
+    .compare {
+      width: 100%;
+      border-collapse: collapse;
+      border: 0.5px solid var(--border);
+      border-radius: var(--rlg);
+      overflow: hidden;
+      margin-top: 2.5rem;
+      font-size: 0.82rem;
+    }
+    .compare th {
+      background: var(--bg3); color: var(--text2);
+      font-weight: 600; font-size: 11px; letter-spacing: 0.06em;
+      padding: 0.875rem 1.25rem; text-align: left;
+      border-bottom: 0.5px solid var(--border);
+    }
+    .compare th:first-child { width: 40%; }
+    .compare td {
+      padding: 0.75rem 1.25rem;
+      border-bottom: 0.5px solid var(--border);
+      color: var(--text2); vertical-align: middle;
+    }
+    .compare tr:last-child td { border-bottom: none; }
+    .compare tr:hover td { background: rgba(180,210,255,0.02); }
+    .compare td:first-child { color: var(--text); font-weight: 500; }
+    .compare .yes { color: var(--green); font-weight: 600; }
+    .compare .no  { color: var(--text3); }
+    .compare .hot-col { background: rgba(91,164,207,0.04); }
+
+    /* ── FAQ ───────────────────────────────────────────── */
+    .faq { margin-top: 2.5rem; }
+    .faq-item {
+      border-top: 0.5px solid var(--border);
+      padding: 1.5rem 0;
+    }
+    .faq-item:last-child { border-bottom: 0.5px solid var(--border); }
+    .faq-q {
+      font-size: 0.9rem; font-weight: 600; cursor: pointer;
+      display: flex; justify-content: space-between; align-items: center;
+      gap: 1rem;
+    }
+    .faq-q::after {
+      content: '+';
+      color: var(--accent); font-size: 1.2rem; flex-shrink: 0;
+      transition: transform 0.2s;
+    }
+    .faq-item.open .faq-q::after { transform: rotate(45deg); }
+    .faq-a {
+      font-size: 0.82rem; color: var(--text2); line-height: 1.7;
+      max-height: 0; overflow: hidden; transition: max-height 0.25s ease, margin-top 0.2s;
+    }
+    .faq-item.open .faq-a { max-height: 300px; margin-top: 0.875rem; }
+
+    /* ── Responsive ────────────────────────────────────── */
+    @media (max-width: 640px) {
+      .compare { display: none; } /* table hard to read on mobile — cards suffice */
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="site-nav">
+    <a class="nav-logo" href="../">gnoke<span>-skins</span></a>
+    <div class="nav-links">
+      <a href="../philosophy/">Philosophy</a>
+      <a href="../skins/">Skins</a>
+      <a href="../pricing/">Pricing</a>
+      <a href="../pricing/" class="nav-cta">Get started</a>
+    </div>
+    <button class="nav-hamburger" aria-label="Open menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+  <div class="nav-drawer">
+    <a href="../philosophy/">Philosophy</a>
+    <a href="../skins/">Skins</a>
+    <a href="../pricing/">Pricing</a>
+    <a href="../pricing/">Get started →</a>
+  </div>
+
+  <main>
+
+    <!-- PAGE HERO -->
+    <div class="page-hero">
+      <div class="page-hero-inner">
+        <div class="tag">Pricing</div>
+        <h1>Start free.<br>Scale when ready.</h1>
+        <p class="lead">
+          Templates are MIT-licensed — free forever, no sign-up, no strings.
+          You pay for a custom skin designed specifically for your device,
+          exactly when you need it. No subscriptions.
+        </p>
+      </div>
+    </div>
+
+    <!-- CARDS -->
+    <div class="section">
+      <div class="pricing-grid">
+
+        <!-- FREE -->
+        <div class="price-card">
+          <div class="price-tier">Free</div>
+          <div class="price-amt">$0</div>
+          <div class="price-per">MIT licence · forever · no sign-up.</div>
+          <hr class="price-div">
+          <div class="price-feat">3 base skin templates</div>
+          <div class="price-feat">Gnoke runtime &amp; config.js standard</div>
+          <div class="price-feat">PWM + Solar demo skins</div>
+          <div class="price-feat">Full source on GitHub — modify freely</div>
+          <div class="price-feat">Use commercially, no attribution needed</div>
+          <div class="price-feat off">Custom layout for your device</div>
+          <div class="price-feat off">Private branding &amp; colour scheme</div>
+          <a class="btn btn-ghost" href="https://github.com/edmundsparrow/gnoke-skins" target="_blank" rel="noopener">
+            Download on GitHub
+          </a>
+        </div>
+
+        <!-- CUSTOM SKIN -->
+        <div class="price-card hot">
+          <div class="price-tier">Custom skin <span class="price-badge">Popular</span></div>
+          <div class="price-amt">$149</div>
+          <div class="price-per">One-time · per skin</div>
+          <hr class="price-div">
+          <div class="price-feat">Tailored to your device's config.js</div>
+          <div class="price-feat">Your branding and colour scheme</div>
+          <div class="price-feat">Preset profiles configured</div>
+          <div class="price-feat">Mobile + desktop layout</div>
+          <div class="price-feat">2 revision rounds included</div>
+          <div class="price-feat">Delivered as a single HTML file</div>
+          <a class="btn btn-primary" href="mailto:hello@gnoke-skins.netlify.app?subject=Custom%20Skin%20Request">
+            Request a skin
+          </a>
+        </div>
+
+        <!-- INTEGRATION SUPPORT -->
+        <div class="price-card">
+          <div class="price-tier">Integration support</div>
+          <div class="price-amt">$80</div>
+          <div class="price-per">Per hour · billed as used</div>
+          <hr class="price-div">
+          <div class="price-feat">config.js setup and mapping</div>
+          <div class="price-feat">JSON contract alignment guidance</div>
+          <div class="price-feat">CORS, mDNS, local network config</div>
+          <div class="price-feat">Device JSON endpoint guidance</div>
+          <div class="price-feat">Async troubleshooting via email</div>
+          <div class="price-feat">No minimum commitment</div>
+          <a class="btn btn-ghost" href="mailto:hello@gnoke-skins.netlify.app?subject=Integration%20Support">
+            Get in touch
+          </a>
+        </div>
+
+      </div>
+
+      <!-- COMPARISON TABLE -->
+      <div class="tag" style="margin-top:4rem">Compare</div>
+      <h2>Side by side</h2>
+      <table class="compare">
+        <thead>
+          <tr>
+            <th>Feature</th>
+            <th>Free</th>
+            <th class="hot-col">Custom skin</th>
+            <th>Support</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Base skin templates</td>
+            <td class="yes">3 included</td>
+            <td class="hot-col yes">3 included</td>
+            <td class="yes">3 included</td>
+          </tr>
+          <tr>
+            <td>Gnoke runtime (config.js)</td>
+            <td class="yes">✓</td>
+            <td class="hot-col yes">✓</td>
+            <td class="yes">✓</td>
+          </tr>
+          <tr>
+            <td>Custom machine JSON layout</td>
+            <td class="no">—</td>
+            <td class="hot-col yes">✓</td>
+            <td class="no">—</td>
+          </tr>
+          <tr>
+            <td>Private branding</td>
+            <td class="no">—</td>
+            <td class="hot-col yes">✓</td>
+            <td class="no">—</td>
+          </tr>
+          <tr>
+            <td>Revision rounds</td>
+            <td class="no">—</td>
+            <td class="hot-col">2 rounds</td>
+            <td class="no">—</td>
+          </tr>
+          <tr>
+            <td>Firmware connectivity help</td>
+            <td class="no">—</td>
+            <td class="hot-col no">—</td>
+            <td class="yes">✓ hourly</td>
+          </tr>
+          <tr>
+            <td>Network / CORS setup</td>
+            <td class="no">—</td>
+            <td class="hot-col no">—</td>
+            <td class="yes">✓ hourly</td>
+          </tr>
+        </tbody>
+      </table>
+
+    </div><!-- /section -->
+
+    <!-- FAQ -->
+    <div class="page-border">
+    <div class="section">
+      <div class="tag">FAQ</div>
+      <h2>Common questions</h2>
+      <div class="faq">
+
+        <div class="faq-item">
+          <div class="faq-q">Can I customise the skin's HTML and use it commercially?</div>
+          <div class="faq-a">Yes — fully. All skins are MIT-licensed. Download, modify, brand, and ship in your own product with no fees and no attribution required. The only thing to keep in sync is the <code>config.js</code> contract so your device and skin stay talking.</div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-q">Does the free tier really have no time limit or sign-up?</div>
+          <div class="faq-a">Yes — MIT licence, forever, no account needed. The code lives on GitHub. Download it, modify it, ship it. No strings.</div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-q">What do I need to provide for a custom skin?</div>
+          <div class="faq-a">Share your config.js — or just the JSON keys your device broadcasts. A rough sketch of the layout is helpful but not required. We handle the rest and deliver a single HTML file.</div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-q">What if my device doesn't speak WebSocket?</div>
+          <div class="faq-a">The runtime supports both WebSocket and HTTP polling — your device just needs to serve a JSON endpoint at any interval. The integration support tier can walk you through setting that up on any common embedded platform.</div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-q">Will the skin work on a device with no internet?</div>
+          <div class="faq-a">Yes. The skin is a single self-contained HTML file. All fonts and scripts are either embedded or fetched once and cached. Once deployed to the device's filesystem or SD card, it works fully offline.</div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-q">Can I use a custom skin commercially?</div>
+          <div class="faq-a">Yes. Once delivered, the skin belongs to you. You can deploy it on as many devices as you like, including in commercial products.</div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-q">How long does a custom skin take?</div>
+          <div class="faq-a">Typically 3–5 working days from receiving your JSON contract. More complex layouts or multiple views may take longer — we'll confirm before starting.</div>
+        </div>
+
+      </div>
+    </div>
+    </div>
+
+    <!-- CTA -->
+    <div class="cta-band">
+      <div class="tag center">Ready?</div>
+      <h2>Your device deserves<br>a better face.</h2>
+      <p>Start with the free templates or commission a skin built around your machine.</p>
+      <div class="cta-buttons">
+        <a class="btn btn-primary" href="mailto:hello@gnoke-skins.netlify.app?subject=Custom%20Skin%20Request">Request a skin — $149</a>
+        <a class="btn btn-ghost"   href="https://github.com/edmundsparrow/gnoke-skins" target="_blank" rel="noopener">Free templates on GitHub</a>
+      </div>
+    </div>
+
+  </main>
+
+  <footer class="site-footer">
+    <span>gnoke-skins.netlify.app</span>
+    <nav>
+      <a href="../philosophy/">Philosophy</a>
+      <a href="../skins/">Skins</a>
+      <a href="../pricing/">Pricing</a>
+    </nav>
+    <span>© Gnoke 2025 – 2026 · MIT licence</span>
+  </footer>
+
+  <script src="../nav.js"></script>
+  <script>
+    /* FAQ accordion */
+    document.querySelectorAll('.faq-q').forEach(q => {
+      q.addEventListener('click', () => {
+        const item = q.closest('.faq-item');
+        const wasOpen = item.classList.contains('open');
+        document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+        if (!wasOpen) item.classList.add('open');
+      });
+    });
+  </script>
+</body>
+</html>
