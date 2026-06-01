@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>gnoke-skins — UI Skins for Any Device</title>
+  <meta name="description" content="Beautiful, reusable UI skins for any hardware. Drop in config.js, connect any device. Like Firebase — but for device interfaces.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Fraunces:opsz,wght@9..144,400;9..144,700;9..144,800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="theme.css">
+  <style>
+    /* ── Home-only styles ──────────────────────────────── */
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      min-height: 90vh;
+      border-bottom: 0.5px solid var(--border);
+    }
+    .hero-content {
+      padding: 4rem 2.5rem 3rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      border-right: 0.5px solid var(--border);
+    }
+    .hero-content h1 { margin: 0.75rem 0 1.25rem; }
+    .hero-content h1 .dim { color: var(--text3); }
+    .hero-btn-row { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-top: 2rem; }
+    .hero-stats {
+      display: flex; gap: 2rem;
+      margin-top: 3rem;
+      padding-top: 2rem;
+      border-top: 0.5px solid var(--border);
+    }
+    .stat-n { font-size: 1.5rem; font-weight: 600; color: var(--accent); line-height: 1; }
+    .stat-l { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text3); margin-top: 4px; }
+
+    .hero-demo {
+      background: var(--bg2);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem 2rem;
+      gap: 1rem;
+    }
+    .demo-eyebrow {
+      font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--text3); text-align: center;
+    }
+
+    .skin-widget {
+      width: 100%; max-width: 300px;
+      background: var(--bg3);
+      border: 0.5px solid var(--border2);
+      border-radius: var(--rlg);
+      padding: 1.5rem;
+    }
+    .sw-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 1.5rem; padding-bottom: 1rem;
+      border-bottom: 0.5px solid var(--border);
+    }
+    .sw-title { font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text3); }
+    .sw-online { display: flex; align-items: center; gap: 5px; font-size: 9px; letter-spacing: 0.1em; color: var(--green); }
+    .sw-dot {
+      width: 6px; height: 6px; border-radius: 50%; background: var(--green);
+      animation: blink 2s ease-in-out infinite;
+    }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.25} }
+
+    .sw-metric { margin-bottom: 1.25rem; }
+    .sw-label { font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text3); margin-bottom: 5px; }
+    .sw-val { font-size: 2.25rem; font-weight: 600; color: var(--accent); line-height: 1; }
+    .sw-unit { font-size: 0.9rem; color: var(--text3); margin-left: 2px; }
+    .sw-bar-track { height: 3px; background: var(--border); border-radius: 2px; margin-top: 8px; overflow: hidden; }
+    .sw-bar-fill  { height: 100%; background: var(--accent); border-radius: 2px; transition: width 0.5s ease; }
+
+    .sw-row {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;
+      padding-top: 1.25rem; border-top: 0.5px solid var(--border);
+    }
+    .sw-mini-label { font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text3); }
+    .sw-mini-val   { font-size: 1rem; font-weight: 600; color: var(--text); margin-top: 3px; }
+
+    .sw-presets {
+      display: flex; gap: 0.4rem; flex-wrap: wrap;
+      padding-top: 1.25rem; border-top: 0.5px solid var(--border);
+    }
+    .sw-preset {
+      font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase;
+      padding: 0.35rem 0.65rem;
+      border: 0.5px solid var(--border2);
+      border-radius: 3px; color: var(--text2);
+      cursor: pointer; transition: all 0.15s; background: none;
+      font-family: var(--mono);
+    }
+    .sw-preset:hover, .sw-preset.active {
+      background: var(--accent); color: #1a2035; border-color: var(--accent);
+    }
+
+    /* config.js chip */
+    .config-chip {
+      background: var(--bg4); border: 0.5px solid var(--border2);
+      border-radius: var(--r); padding: 0.7rem 1rem;
+      font-size: 11px; color: var(--green); line-height: 1.7;
+      width: 100%; max-width: 300px;
+    }
+    .config-key   { color: var(--text3); }
+    .config-fname { color: var(--accent); }
+
+    /* ── How it works — 3-col flow ─────────────────────── */
+    .how-grid {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr auto 1fr;
+      align-items: center;
+      gap: 0;
+      border: 0.5px solid var(--border);
+      border-radius: var(--rlg);
+      overflow: hidden;
+      margin-top: 2.5rem;
+    }
+    .how-node {
+      padding: 2rem 1.5rem;
+      text-align: center;
+    }
+    .how-node.hi { background: rgba(91,164,207,0.05); }
+    .how-arrow {
+      padding: 0 0.5rem;
+      color: var(--text3); font-size: 1.2rem;
+      border-left: 0.5px solid var(--border);
+      border-right: 0.5px solid var(--border);
+      align-self: stretch;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .how-label {
+      font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--text3); margin-bottom: 6px;
+    }
+    .how-name { font-size: 0.95rem; font-weight: 600; color: var(--text); }
+    .how-node.hi .how-name { color: var(--accent); }
+    .how-detail { font-size: 10px; color: var(--text3); margin-top: 6px; line-height: 1.5; }
+
+    @media (max-width: 800px) {
+      .hero { grid-template-columns: 1fr; min-height: auto; }
+      .hero-content { border-right: none; border-bottom: 0.5px solid var(--border); padding: 3rem 1.5rem 2.5rem; }
+      .hero-demo { padding: 2.5rem 1.5rem; }
+      .how-grid { grid-template-columns: 1fr; }
+      .how-arrow { display: none; }
+      .how-node { border-bottom: 0.5px solid var(--border); }
+      .how-node:last-child { border-bottom: none; }
+    }
+    @media (max-width: 480px) {
+      .hero-stats { gap: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="site-nav">
+    <a class="nav-logo" href="/">gnoke<span>-skins</span></a>
+    <div class="nav-links">
+      <a href="/philosophy/">Philosophy</a>
+      <a href="/skins/">Skins</a>
+      <a href="/pricing/">Pricing</a>
+      <a href="/pricing/" class="nav-cta">Get started</a>
+    </div>
+    <button class="nav-hamburger" aria-label="Open menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <div class="nav-drawer">
+    <a href="/philosophy/">Philosophy</a>
+    <a href="/skins/">Skins</a>
+    <a href="/pricing/">Pricing</a>
+    <a href="/pricing/">Get started →</a>
+  </div>
+
+  <main>
+
+    <!-- HERO -->
+    <section class="hero">
+      <div class="hero-content">
+        <div class="tag">Skin-as-a-Service</div>
+        <h1>One <code>config.js</code>.<br><span class="dim">Any</span><br>device.</h1>
+        <p class="lead">
+          Beautiful, reusable UI skins for any hardware.
+          Drop in <code>config.js</code>, point it at your device — done.
+          Think of it like Firebase, but for device interfaces.
+        </p>
+        <div class="hero-btn-row">
+          <a class="btn btn-primary" href="/skins/">Browse skins</a>
+          <a class="btn btn-ghost"   href="/philosophy/">How it works</a>
+        </div>
+        <div class="hero-stats">
+          <div>
+            <div class="stat-n">01</div>
+            <div class="stat-l">config.js to edit</div>
+          </div>
+          <div>
+            <div class="stat-n">~3KB</div>
+            <div class="stat-l">Total runtime</div>
+          </div>
+          <div>
+            <div class="stat-n">100%</div>
+            <div class="stat-l">Offline-first</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- LIVE DEMO SKIN -->
+      <div class="hero-demo">
+        <div class="demo-eyebrow">Live demo · PWM Controller</div>
+        <div class="skin-widget">
+          <div class="sw-header">
+            <div class="sw-title">PWM Controller v1</div>
+            <div class="sw-online"><div class="sw-dot"></div>Online</div>
+          </div>
+          <div class="sw-metric">
+            <div class="sw-label">Duty cycle</div>
+            <div><span class="sw-val" id="dv">75</span><span class="sw-unit">%</span></div>
+            <div class="sw-bar-track"><div class="sw-bar-fill" id="db" style="width:75%"></div></div>
+          </div>
+          <div class="sw-row">
+            <div>
+              <div class="sw-mini-label">Frequency</div>
+              <div class="sw-mini-val"><span id="fv">1200</span> Hz</div>
+            </div>
+            <div>
+              <div class="sw-mini-label">Temp</div>
+              <div class="sw-mini-val"><span id="tv">34</span>°C</div>
+            </div>
+          </div>
+          <div class="sw-presets">
+            <button class="sw-preset active" onclick="demoPreset(45,this)">Lathe</button>
+            <button class="sw-preset"        onclick="demoPreset(80,this)">Pump</button>
+            <button class="sw-preset"        onclick="demoPreset(60,this)">Drill</button>
+            <button class="sw-preset"        onclick="demoPreset(95,this)">Boost</button>
+          </div>
+        </div>
+        <div class="config-chip">
+          <span class="config-fname">config.js</span><br>
+          <span class="config-key">host:</span> <span>"ws://192.168.1.42"</span>,<br>
+          <span class="config-key">duty:</span> <span id="jd">75</span>, <span class="config-key">freq:</span> <span id="jf">1200</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- TICKER -->
+    <div class="ticker-wrap">
+      <div class="ticker-inner">
+        <span class="ticker-item"><b>ESP32</b> compatible</span>
+        <span class="ticker-item"><b>STM32</b> compatible</span>
+        <span class="ticker-item"><b>Arduino</b> compatible</span>
+        <span class="ticker-item"><b>Raspberry Pi</b> compatible</span>
+        <span class="ticker-item">No <b>npm install</b></span>
+        <span class="ticker-item">One <b>config.js</b></span>
+        <span class="ticker-item">Works <b>offline</b></span>
+        <span class="ticker-item">Phone, tablet, <b>browser</b></span>
+        <span class="ticker-item">One <b>HTML file</b></span>
+        <span class="ticker-item">Device stays <b>untouched</b></span>
+        <!-- duplicate for seamless loop -->
+        <span class="ticker-item"><b>ESP32</b> compatible</span>
+        <span class="ticker-item"><b>STM32</b> compatible</span>
+        <span class="ticker-item"><b>Arduino</b> compatible</span>
+        <span class="ticker-item"><b>Raspberry Pi</b> compatible</span>
+        <span class="ticker-item">No <b>npm install</b></span>
+        <span class="ticker-item">One <b>config.js</b></span>
+        <span class="ticker-item">Works <b>offline</b></span>
+        <span class="ticker-item">Phone, tablet, <b>browser</b></span>
+        <span class="ticker-item">One <b>HTML file</b></span>
+        <span class="ticker-item">Device stays <b>untouched</b></span>
+      </div>
+    </div>
+
+    <!-- HOW IT WORKS -->
+    <div class="section">
+      <div class="tag">How it works</div>
+      <h2>Three pieces. Infinite skins.</h2>
+      <p class="lead" style="margin-top:0.75rem">
+        Your device speaks JSON. <code>config.js</code> is the handshake. The skin is swappable. That's the whole model.
+      </p>
+      <div class="how-grid">
+        <div class="how-node">
+          <div class="how-label">Your device</div>
+          <div class="how-name">Any hardware</div>
+          <div class="how-detail">ESP32, Arduino, Pi, STM32.<br>Just needs a JSON endpoint.</div>
+        </div>
+        <div class="how-arrow">→</div>
+        <div class="how-node hi">
+          <div class="how-label">The standard</div>
+          <div class="how-name">config.js</div>
+          <div class="how-detail">One file. Declare your device's<br>address, keys, and presets.</div>
+        </div>
+        <div class="how-arrow">→</div>
+        <div class="how-node">
+          <div class="how-label">The interface</div>
+          <div class="how-name">Any Gnoke skin</div>
+          <div class="how-detail">Industrial, mobile, minimal.<br>Swap freely. No rewiring.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CTA BAND -->
+    <div class="cta-band">
+      <div class="tag center">Ready?</div>
+      <h2>Your device deserves<br>a better face.</h2>
+      <p>Download a skin, edit one file, and have your interface running in an afternoon.</p>
+      <div class="cta-buttons">
+        <a class="btn btn-primary" href="/skins/">Browse skins</a>
+        <a class="btn btn-ghost"   href="https://github.com/edmundsparrow/gnoke-skins" target="_blank" rel="noopener">View on GitHub</a>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <span>gnoke-skins.netlify.app</span>
+    <nav>
+      <a href="/philosophy/">Philosophy</a>
+      <a href="/skins/">Skins</a>
+      <a href="/pricing/">Pricing</a>
+    </nav>
+    <span>© Gnoke 2025 – 2026 · MIT licence</span>
+  </footer>
+
+  <script src="nav.js"></script>
+  <script>
+    let _v = 75, _d = 1;
+    function demoUpdate(v) {
+      v = Math.round(v);
+      const f = Math.round(800 + v * 12), t = Math.round(28 + v * 0.18);
+      document.getElementById('dv').textContent = v;
+      document.getElementById('db').style.width = v + '%';
+      document.getElementById('fv').textContent = f;
+      document.getElementById('tv').textContent = t;
+      document.getElementById('jd').textContent = v;
+      document.getElementById('jf').textContent = f;
+    }
+    setInterval(() => {
+      _v += _d * (Math.random() * 1.2 + 0.3);
+      if (_v > 83) _d = -1;
+      if (_v < 62) _d =  1;
+      demoUpdate(_v);
+    }, 1100);
+    function demoPreset(duty, btn) {
+      document.querySelectorAll('.sw-preset').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      _v = duty; _d = 1; demoUpdate(duty);
+    }
+  </script>
+</body>
+</html>
