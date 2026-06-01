@@ -1,1 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Skins — gnoke-skins</title>
+  <meta name="description" content="Ready-to-deploy UI skins for any device. Each skin reads the same config.js. Industrial, minimal, mobile — all interchangeable.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Fraunces:opsz,wght@9..144,400;9..144,700;9..144,800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../theme.css">
+  <style>
+    .skins-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1rem;
+      margin-top: 2.5rem;
+    }
+    .skin-card {
+      border: 0.5px solid var(--border);
+      border-radius: var(--rlg);
+      overflow: hidden;
+      transition: border-color 0.2s, transform 0.2s;
+      background: var(--bg2);
+    }
+    .skin-card:hover { border-color: var(--border3); transform: translateY(-3px); }
 
+    .skin-preview {
+      height: 180px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .skin-preview.ind  { background: #111820; }
+    .skin-preview.lite { background: #f0eeea; }
+    .skin-preview.mob  { background: #0e0e1c; }
+
+    .skin-info { padding: 1.25rem; border-top: 0.5px solid var(--border); }
+    .skin-name { font-size: 0.9rem; font-weight: 600; margin-bottom: 0.35rem; }
+    .skin-desc { font-size: 0.78rem; color: var(--text2); line-height: 1.6; margin-bottom: 1rem; }
+    .skin-tags { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+    .skin-tag {
+      font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase;
+      padding: 2px 7px; border-radius: 3px;
+      background: var(--bg3); border: 0.5px solid var(--border2);
+      color: var(--text3);
+    }
+
+    /* steps */
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      border: 0.5px solid var(--border);
+      border-radius: var(--rlg);
+      overflow: hidden;
+      margin-top: 2.5rem;
+    }
+    .step { padding: 1.75rem; border-right: 0.5px solid var(--border); }
+    .step:last-child { border-right: none; }
+    .step-num { font-size: 10px; color: var(--accent); letter-spacing: 0.1em; margin-bottom: 0.75rem; }
+    .step p { font-size: 0.8rem; color: var(--text2); line-height: 1.65; margin-top: 0.35rem; }
+
+    .coming-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 0.75rem;
+      margin-top: 2rem;
+    }
+    .coming-card {
+      border: 0.5px dashed var(--border2);
+      border-radius: var(--rlg);
+      padding: 1.5rem;
+      opacity: 0.6;
+    }
+    .coming-card h3 { font-size: 0.875rem; }
+    .coming-card p  { font-size: 0.78rem; color: var(--text3); margin-top: 0.35rem; line-height: 1.55; }
+    .coming-badge {
+      display: inline-block;
+      font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase;
+      background: var(--bg3); border: 0.5px solid var(--border2);
+      color: var(--text3); border-radius: 3px; padding: 2px 7px;
+      margin-bottom: 0.75rem;
+    }
+
+    @media (max-width: 640px) {
+      .step { border-right: none; border-bottom: 0.5px solid var(--border); }
+      .step:last-child { border-bottom: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="site-nav">
+    <a class="nav-logo" href="/">gnoke<span>-skins</span></a>
+    <div class="nav-links">
+      <a href="/philosophy/">Philosophy</a>
+      <a href="/skins/">Skins</a>
+      <a href="/pricing/">Pricing</a>
+      <a href="/pricing/" class="nav-cta">Get started</a>
+    </div>
+    <button class="nav-hamburger" aria-label="Open menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+  <div class="nav-drawer">
+    <a href="/philosophy/">Philosophy</a>
+    <a href="/skins/">Skins</a>
+    <a href="/pricing/">Pricing</a>
+    <a href="/pricing/">Get started →</a>
+  </div>
+
+  <main>
+
+    <!-- PAGE HERO -->
+    <div class="page-hero">
+      <div class="page-hero-inner">
+        <div class="tag">Skins</div>
+        <h1>Ready-to-deploy interfaces</h1>
+        <p class="lead">
+          Every skin ships as a single <code>index.html</code> and reads your <code>config.js</code>.
+          Swap skins freely — different character, same zero-rewiring rule.
+        </p>
+      </div>
+    </div>
+
+    <!-- SKIN CARDS -->
+    <div class="section">
+      <div class="tag">Available now</div>
+      <h2>Skins. One config.</h2>
+
+      <div class="skins-grid">
+
+        <!-- Industrial Dim -->
+        <div class="skin-card">
+          <div class="skin-preview ind">
+            <div style="text-align:center;font-family:'IBM Plex Mono',monospace">
+              <div style="font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:#4a5870;margin-bottom:8px">Duty cycle</div>
+              <div style="font-size:2.4rem;font-weight:600;color:#5ba4cf;line-height:1">75%</div>
+              <div style="margin-top:10px;display:flex;gap:3px;justify-content:center">
+                <div style="width:28px;height:3px;background:#5ba4cf;border-radius:1px"></div>
+                <div style="width:28px;height:3px;background:#5ba4cf;border-radius:1px"></div>
+                <div style="width:28px;height:3px;background:#1e2a3a;border-radius:1px"></div>
+              </div>
+              <div style="margin-top:10px;font-size:10px;color:#3a4d62;letter-spacing:0.1em">1200 Hz · 34°C</div>
+            </div>
+          </div>
+          <div class="skin-info">
+            <div class="skin-name">Industrial Dim</div>
+            <div class="skin-desc">
+              High contrast on a deep navy base. Large touch targets, segmented bars,
+              glove-friendly preset buttons. Built for workshop environments.
+            </div>
+            <div class="skin-tags">
+              <span class="skin-tag">touchscreen</span>
+              <span class="skin-tag">workshop</span>
+              <span class="skin-tag">offline-first</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Minimal Light -->
+        <div class="skin-card">
+          <div class="skin-preview lite">
+            <div style="text-align:center;font-family:'IBM Plex Mono',monospace">
+              <div style="font-size:9px;letter-spacing:0.14em;text-transform:uppercase;color:#aaa;margin-bottom:8px">Duty cycle</div>
+              <div style="font-size:2.4rem;font-weight:600;color:#1a2035;line-height:1">75%</div>
+              <div style="margin-top:10px;width:90px;height:1px;background:#ccc;margin-left:auto;margin-right:auto"></div>
+              <div style="margin-top:8px;font-size:10px;color:#aaa;letter-spacing:0.08em">1200 Hz · 34°C</div>
+            </div>
+          </div>
+          <div class="skin-info">
+            <div class="skin-name">Minimal Light</div>
+            <div class="skin-desc">
+              Clean editorial aesthetic on an off-white background. Suited to
+              office environments, client demos, and situations where you want
+              the numbers to do the talking.
+            </div>
+            <div class="skin-tags">
+              <span class="skin-tag">office</span>
+              <span class="skin-tag">demo</span>
+              <span class="skin-tag">light-mode</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Mobile-first -->
+        <div class="skin-card">
+          <div class="skin-preview mob">
+            <div style="width:96px;background:#13132a;border:0.5px solid rgba(91,164,207,0.2);border-radius:12px;padding:12px;font-family:'IBM Plex Mono',monospace">
+              <div style="font-size:8px;color:#3a4d62;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:5px">Duty</div>
+              <div style="font-size:1.5rem;font-weight:600;color:#5ba4cf">75%</div>
+              <div style="height:2px;background:rgba(91,164,207,0.12);border-radius:1px;margin-top:6px">
+                <div style="width:75%;height:100%;background:#5ba4cf;border-radius:1px"></div>
+              </div>
+              <div style="display:flex;gap:4px;margin-top:10px">
+                <div style="flex:1;height:20px;background:#1a1a30;border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:6px;color:#3a4d62">PUMP</div>
+                <div style="flex:1;height:20px;background:#1a1a30;border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:6px;color:#3a4d62">LATHE</div>
+              </div>
+            </div>
+          </div>
+          <div class="skin-info">
+            <div class="skin-name">Mobile-first</div>
+            <div class="skin-desc">
+              Thumb-reachable layout for phone and tablet. Open in any mobile
+              browser on the same local network — no app install needed.
+            </div>
+            <div class="skin-tags">
+              <span class="skin-tag">mobile</span>
+              <span class="skin-tag">tablet</span>
+              <span class="skin-tag">wi-fi</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Risin RSPWM30 -->
+        <div class="skin-card">
+          <div class="skin-preview ind" style="background:#8a9070;">
+            <div style="text-align:center;font-family:'IBM Plex Mono',monospace;">
+              <div style="font-size:9px;letter-spacing:0.14em;text-transform:uppercase;color:#4a4a3a;margin-bottom:6px">Battery voltage</div>
+              <div style="font-size:2.4rem;font-weight:600;color:#1a1a0e;line-height:1">13.7<span style="font-size:1rem;color:#4a4a3a">V</span></div>
+              <div style="margin-top:8px;display:flex;gap:4px;justify-content:center">
+                <div style="width:10px;height:14px;background:#2a2a1a;border-radius:2px"></div>
+                <div style="width:10px;height:14px;background:#2a2a1a;border-radius:2px"></div>
+                <div style="width:10px;height:10px;background:#2a2a1a;border-radius:2px;align-self:flex-end"></div>
+                <div style="width:10px;height:6px;background:#2a2a1a;border-radius:2px;align-self:flex-end"></div>
+              </div>
+              <div style="margin-top:8px;font-size:9px;color:#4a4a3a;letter-spacing:0.1em">Float · 6-screen menu</div>
+            </div>
+          </div>
+          <div class="skin-info">
+            <div class="skin-name">Risin RSPWM30</div>
+            <div class="skin-desc">
+              Full recreation of the RSPWM30 solar charge controller interface.
+              6-screen menu, edit mode, battery simulation, load switching —
+              running entirely in a browser. Device untouched.
+            </div>
+            <div class="skin-tags">
+              <span class="skin-tag">solar</span>
+              <span class="skin-tag">charge controller</span>
+              <span class="skin-tag">prototype</span>
+            </div>
+            <a class="btn btn-ghost" href="https://edmundsparrow.github.io/gnoke-skin/pwm1" target="_blank" rel="noopener" style="margin-top:1rem;display:inline-flex">Open demo →</a>
+          </div>
+        </div>
+
+      </div><!-- /skins-grid -->
+
+      <!-- HOW TO USE -->
+      <div class="tag" style="margin-top:4rem">Usage</div>
+      <h2>Up and running in four steps</h2>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">01</div>
+          <h3>Download a skin</h3>
+          <p>Grab any skin folder from GitHub. <code>index.html</code> is your starting point — customise it as much as you need.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">02</div>
+          <h3>Edit <code>config.js</code></h3>
+          <p>Set your device address, map your JSON keys, name your commands. Start here before touching anything else.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">03</div>
+          <h3>Align your device</h3>
+          <p>Your device just needs to broadcast state as JSON and accept commands in the same shape. That's the full contract.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">04</div>
+          <h3>Open in any browser</h3>
+          <p>Phone, tablet, desktop, touchscreen panel. Serve from anywhere — or open the file directly. Works offline.</p>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- COMING SOON -->
+    <div class="page-border">
+    <div class="section">
+      <div class="tag">Roadmap</div>
+      <h2>Coming soon</h2>
+      <p class="lead" style="margin-top:0.75rem">
+        More skins in development. All reading the same <code>config.js</code>.
+      </p>
+      <div class="coming-grid">
+        <div class="coming-card">
+          <div class="coming-badge">In progress</div>
+          <h3>Solar Monitor</h3>
+          <p>Panel voltage, battery SOC, load current, and daily yield chart.</p>
+        </div>
+        <div class="coming-card">
+          <div class="coming-badge">Planned</div>
+          <h3>Motor Driver</h3>
+          <p>RPM gauge, direction toggle, fault indicators, and torque curve display.</p>
+        </div>
+        <div class="coming-card">
+          <div class="coming-badge">Planned</div>
+          <h3>Workshop Automation</h3>
+          <p>Multi-axis status, relay controls, sensor array, and alarm thresholds.</p>
+        </div>
+        <div class="coming-card">
+          <div class="coming-badge">Planned</div>
+          <h3>Custom for you</h3>
+          <p>Need a skin built around your specific device and JSON shape? That's what the custom tier is for.</p>
+        </div>
+      </div>
+    </div>
+    </div>
+
+    <!-- CTA -->
+    <div class="cta-band">
+      <div class="tag center">Get started</div>
+      <h2>Need a skin built for your device?</h2>
+      <p>The custom tier is tailored to your <code>config.js</code> — delivered as a single HTML file.</p>
+      <div class="cta-buttons">
+        <a class="btn btn-primary" href="/pricing/">See pricing</a>
+        <a class="btn btn-ghost"   href="/philosophy/">Read the philosophy</a>
+      </div>
+    </div>
+
+  </main>
+
+  <footer class="site-footer">
+    <span>gnoke-skins.netlify.app</span>
+    <nav>
+      <a href="/philosophy/">Philosophy</a>
+      <a href="/skins/">Skins</a>
+      <a href="/pricing/">Pricing</a>
+    </nav>
+    <span>© Gnoke 2025 – 2026 · MIT licence</span>
+  </footer>
+
+  <script src="../nav.js"></script>
+</body>
+</html>
