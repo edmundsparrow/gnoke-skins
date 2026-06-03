@@ -1,1 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0">
+<title>Risin RSPWM30 — Gnoke Skin</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;background:#c8c8c8;display:flex;justify-content:center;align-items:center;font-family:'Courier New',monospace}
 
+.skin{width:380px;max-width:96vw;display:flex;flex-direction:column;gap:14px}
+
+/* ── Device label ── */
+.device-label{text-align:center;font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:#555}
+
+/* ── LCD shell ── */
+.lcd-shell{
+  background:#8a9070;
+  border-radius:14px;
+  padding:6px;
+  box-shadow:0 4px 18px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.15);
+}
+.lcd{
+  background:#b8c2a0;
+  border-radius:9px;
+  padding:16px 18px 14px;
+  min-height:260px;
+  display:flex;flex-direction:column;
+  box-shadow:inset 0 0 22px rgba(0,0,0,.18);
+  position:relative;
+  overflow:hidden;
+}
+/* scanline texture */
+.lcd::before{
+  content:'';position:absolute;inset:0;
+  background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,.03) 3px,rgba(0,0,0,.03) 4px);
+  pointer-events:none;
+}
+
+/* ── Status row ── */
+.status-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;height:62px}
+
+.solar-wrap{display:flex;flex-direction:column;align-items:center;gap:3px}
+.sun{font-size:18px;line-height:1}
+.solar-grid{
+  width:52px;height:38px;border:2px solid #2a2a1a;
+  display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(2,1fr);
+  transform:skew(-6deg);background:#6a7858;
+}
+.solar-grid div{border:.5px solid #2a2a1a;background:#7a8a68}
+.solar-grid div:nth-child(odd){background:#6a7858}
+.solar-active .solar-grid div{background:#9aba78}
+.solar-active .solar-grid div:nth-child(odd){background:#8aaa68}
+
+.flow-arrows{display:flex;gap:3px;align-items:center}
+.arr{width:9px;height:9px;background:#2a2a1a;clip-path:polygon(0 0,100% 50%,0 100%);opacity:0.7}
+.arr.lit{animation:flow-anim .9s infinite}
+.arr:nth-child(2).lit{animation-delay:.25s}
+.arr:nth-child(3).lit{animation-delay:.5s}
+@keyframes flow-anim{0%,100%{opacity:.15}50%{opacity:.85}}
+/* thick solid arrow for float voltage screen */
+.arr.thick{width:13px;height:13px;opacity:1;background:#1a1a0e;animation:none}
+.flow-arrows.hidden{visibility:hidden}
+.solar-wrap.hidden{visibility:hidden}
+.load-wrap.hidden{visibility:hidden}
+
+.battery-wrap{display:flex;flex-direction:column;align-items:center;gap:3px}
+.batt-icon{
+  width:58px;height:26px;border:2.5px solid #2a2a1a;border-radius:3px;
+  position:relative;display:flex;align-items:center;justify-content:space-evenly;
+  padding:3px 4px;
+}
+.batt-icon::after{content:'';position:absolute;right:-7px;top:50%;transform:translateY(-50%);width:5px;height:12px;background:#2a2a1a;border-radius:0 2px 2px 0}
+.batt-bar{width:9px;border-radius:1px;background:#2a2a1a;align-self:flex-end;transition:height .4s}
+.batt-label{font-size:9px;letter-spacing:.08em;color:#3a3a2a;font-weight:bold}
+
+.load-wrap{display:flex;flex-direction:column;align-items:center;gap:2px}
+.bulb{font-size:36px;line-height:1;transition:opacity .3s}
+.bulb.off{opacity:.25;filter:grayscale(1)}
+.load-label{font-size:9px;letter-spacing:.06em;color:#3a3a2a;font-weight:bold}
+
+/* ── Screen area ── */
+.screen-area{flex:1;display:flex;flex-direction:column;justify-content:center}
+
+.screen{display:none;animation:scrfade .12s ease}
+.screen.active{display:flex;flex-direction:column;justify-content:center}
+@keyframes scrfade{from{opacity:0}to{opacity:1}}
+
+/* big number */
+.big-num{
+  font-size:74px;font-weight:bold;color:#1a1a0e;line-height:1;
+  letter-spacing:-.02em;text-align:center;
+}
+.big-unit{font-size:20px;color:#3a3a2a;letter-spacing:.08em}
+.big-row{display:flex;align-items:baseline;justify-content:center;gap:6px;margin-bottom:4px}
+
+/* editing blink */
+.editing .big-num{animation:blink .7s infinite}
+@keyframes blink{50%{opacity:0}}
+
+/* screen label */
+.scr-label{
+  text-align:center;font-size:10px;letter-spacing:.18em;
+  text-transform:uppercase;color:#4a4a3a;font-weight:bold;
+  margin-bottom:8px;
+}
+.scr-index{float:right;color:#7a7a6a;font-size:9px;letter-spacing:.1em}
+
+
+/* param list */
+.params{margin-top:10px}
+.param-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:.5px solid rgba(0,0,0,.1)}
+.param-row:last-child{border-bottom:none}
+.param-k{font-size:10px;color:#4a4a3a;letter-spacing:.06em}
+.param-v{font-size:13px;font-weight:bold;color:#1a1a0e}
+
+/* choice list */
+.choices{display:flex;flex-direction:column;gap:6px;margin-top:6px}
+.choice{
+  display:flex;align-items:center;gap:8px;
+  padding:7px 10px;border:1.5px solid transparent;border-radius:6px;
+  background:rgba(0,0,0,.06);
+}
+.choice.sel{border-color:#2a2a1a;background:rgba(0,0,0,.14)}
+.choice-dot{width:6px;height:6px;border-radius:50%;background:rgba(0,0,0,.2);flex-shrink:0}
+.choice.sel .choice-dot{background:#1a1a0e}
+.choice-lbl{font-size:10px;color:#3a3a2a;letter-spacing:.06em}
+.choice.sel .choice-lbl{color:#1a1a0e;font-weight:bold}
+.choice-hint{font-size:9px;color:#6a6a5a;margin-left:auto}
+
+.hint{font-size:8px;letter-spacing:.12em;text-transform:uppercase;text-align:center;color:#6a6a5a;margin-top:10px}
+
+/* ── Buttons ── */
+.buttons{
+  display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;
+}
+.btn{
+  background:#2a2a1a;color:#e8e0c8;
+  border:none;border-radius:12px;
+  padding:18px 8px;
+  font-family:'Courier New',monospace;
+  font-size:11px;font-weight:bold;letter-spacing:.12em;
+  text-transform:uppercase;
+  cursor:pointer;
+  display:flex;flex-direction:column;align-items:center;gap:5px;
+  box-shadow:0 4px 0 #111,0 5px 8px rgba(0,0,0,.3);
+  transition:transform .08s,box-shadow .08s;
+  -webkit-tap-highlight-color:transparent;
+  user-select:none;
+}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 #111,0 2px 4px rgba(0,0,0,.2)}
+.btn-ico{font-size:20px;line-height:1}
+.btn-sub{font-size:8px;color:#8a8070;letter-spacing:.08em}
+
+/* long-press ring on menu */
+.btn-ring{
+  width:32px;height:32px;border-radius:50%;
+  border:2px solid transparent;
+  display:flex;align-items:center;justify-content:center;
+  position:relative;font-size:20px;
+  transition:border-color .1s;
+}
+.btn-ring.pressing{border-color:#e8e0c8}
+.btn-ring svg{position:absolute;inset:0;width:100%;height:100%;transform:rotate(-90deg)}
+.btn-ring circle{fill:none;stroke:#e8e0c8;stroke-width:2;stroke-dasharray:88;stroke-dashoffset:88;transition:stroke-dashoffset .7s linear}
+.btn-ring.pressing circle{stroke-dashoffset:0}
+</style>
+</head>
+<body>
+
+<div class="skin">
+  <div class="device-label">Risin Energy — RSPWM30 Solar Charge Controller</div>
+
+  <div class="lcd-shell">
+    <div class="lcd">
+
+      <!-- Status row -->
+      <div class="status-row">
+
+        <div class="solar-wrap" id="solar-wrap">
+          <div class="sun">☀️</div>
+          <div class="solar-grid" id="solar-grid">
+            <div></div><div></div><div></div>
+            <div></div><div></div><div></div>
+          </div>
+        </div>
+
+        <div class="flow-arrows" id="pv-flow">
+          <div class="arr lit"></div><div class="arr lit"></div><div class="arr lit"></div>
+        </div>
+
+        <div class="battery-wrap">
+          <div class="batt-icon">
+            <div class="batt-bar" id="b1" style="height:6px"></div>
+            <div class="batt-bar" id="b2" style="height:6px"></div>
+            <div class="batt-bar" id="b3" style="height:6px"></div>
+            <div class="batt-bar" id="b4" style="height:6px"></div>
+          </div>
+          <div class="batt-label" id="soc-lbl">72%</div>
+        </div>
+
+        <div class="flow-arrows" id="load-flow">
+          <div class="arr lit"></div><div class="arr lit"></div><div class="arr lit"></div>
+        </div>
+
+        <div class="load-wrap" id="load-wrap">
+          <div class="bulb" id="bulb">💡</div>
+          <div class="load-label" id="load-lbl">ON</div>
+        </div>
+
+      </div>
+
+      <!-- Screens -->
+
+      <!-- S1 Main -->
+      <div class="screen active" id="s-main">
+        <div class="scr-label"><span class="scr-index">1/6</span>Main display</div>
+        <div class="big-row">
+          <span class="big-num" id="v-main">13.2</span>
+          <span class="big-unit">V</span>
+        </div>
+      </div>
+
+      <!-- S2 Float voltage -->
+      <div class="screen" id="s-float">
+        <div class="scr-label"><span class="scr-index">2/6</span>Float voltage</div>
+        <div class="big-row" id="edit-float">
+          <span class="big-num" id="v-float">13.7</span>
+          <span class="big-unit">V</span>
+        </div>
+        <div class="params">
+          <div class="param-row"><span class="param-k">Battery type</span><span class="param-v">B01</span></div>
+          <div class="param-row"><span class="param-k">Default</span><span class="param-v">13.7V</span></div>
+        </div>
+        <div class="hint" id="hint-float">Long press MENU to edit</div>
+      </div>
+
+      <!-- S3 Discharge reconnect -->
+      <div class="screen" id="s-drecon">
+        <div class="scr-label"><span class="scr-index">3/6</span>Discharge reconnect</div>
+        <div class="big-row" id="edit-drecon">
+          <span class="big-num" id="v-drecon">12.6</span>
+          <span class="big-unit">V</span>
+        </div>
+        <div class="params">
+          <div class="param-row"><span class="param-k">Default</span><span class="param-v">12.6V</span></div>
+        </div>
+        <div class="hint" id="hint-drecon">Long press MENU to edit</div>
+      </div>
+
+      <!-- S4 Discharge stop -->
+      <div class="screen" id="s-dstop">
+        <div class="scr-label"><span class="scr-index">4/6</span>Discharge stop</div>
+        <div class="big-row" id="edit-dstop">
+          <span class="big-num" id="v-dstop">10.7</span>
+          <span class="big-unit">V</span>
+        </div>
+        <div class="params">
+          <div class="param-row"><span class="param-k">Default</span><span class="param-v">10.7V</span></div>
+        </div>
+        <div class="hint" id="hint-dstop">Long press MENU to edit</div>
+      </div>
+
+      <!-- S5 Timer hours -->
+      <div class="screen" id="s-24h">
+        <div class="scr-label"><span class="scr-index">5/6</span>Timer — hours</div>
+        <div class="big-row" id="edit-24h">
+          <span class="big-num" id="v-24h">12</span>
+          <span class="big-unit">H</span>
+        </div>
+        <div class="params">
+          <div class="param-row"><span class="param-k">Range</span><span class="param-v">1 – 23 H</span></div>
+          <div class="param-row"><span class="param-k">Mode</span><span class="param-v">1–23H</span></div>
+        </div>
+        <div class="hint" id="hint-24h">Long press MENU to edit · UP/DOWN to set</div>
+      </div>
+
+      <!-- S6 Battery type -->
+      <div class="screen" id="s-batt">
+        <div class="scr-label"><span class="scr-index">6/6</span>Battery type</div>
+        <div class="choices" id="batt-choices">
+          <div class="choice sel" id="bc-0"><div class="choice-dot"></div><span class="choice-lbl">B01 — Sealed</span><span class="choice-hint">14.4V eq</span></div>
+          <div class="choice"     id="bc-1"><div class="choice-dot"></div><span class="choice-lbl">B02 — Gel</span><span class="choice-hint">14.2V eq</span></div>
+          <div class="choice"     id="bc-2"><div class="choice-dot"></div><span class="choice-lbl">B03 — Flood</span><span class="choice-hint">14.6V eq</span></div>
+        </div>
+        <div class="hint">UP / DOWN to select · MENU confirms</div>
+      </div>
+
+      <!-- Edit overlay -->
+      <div class="screen" id="s-edit">
+        <div class="scr-label" style="color:#5a3a0a"><span class="scr-index" style="color:#8a5a2a">EDIT</span>Setting mode</div>
+        <div class="big-row">
+          <span class="big-num" id="edit-val" style="color:#7a4a0a;animation:blink .7s infinite">13.7</span>
+          <span class="big-unit" style="color:#8a6a3a">V</span>
+        </div>
+        <div class="params">
+          <div class="param-row"><span class="param-k">▲ UP &nbsp;&nbsp;+0.1V</span></div>
+          <div class="param-row"><span class="param-k">▼ DOWN −0.1V</span></div>
+        </div>
+        <div class="hint">Long press MENU to save &amp; exit</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Buttons -->
+  <div class="buttons">
+    <button class="btn" id="btn-menu">
+      <div class="btn-ring" id="menu-ring">
+        <svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="13" id="ring-circle"/></svg>
+        ☰
+      </div>
+      <span>Menu</span>
+      <span class="btn-sub">Hold=edit</span>
+    </button>
+    <button class="btn" id="btn-up">
+      <span class="btn-ico">▲</span>
+      <span>Up</span>
+      <span class="btn-sub">Increase</span>
+    </button>
+    <button class="btn" id="btn-down">
+      <span class="btn-ico">▼</span>
+      <span>Down</span>
+      <span class="btn-sub">On/Off load</span>
+    </button>
+  </div>
+
+</div>
+
+<script>
+const SCREENS = ['main','float','drecon','dstop','24h','batt'];
+const EDITABLE = {
+  float:  {elId:'v-float',  editElId:'edit-float',  min:12.0, max:15.5, step:0.1, unit:'V'},
+  drecon: {elId:'v-drecon', editElId:'edit-drecon', min:11.0, max:13.5, step:0.1, unit:'V'},
+  dstop:  {elId:'v-dstop',  editElId:'edit-dstop',  min:9.0,  max:12.0, step:0.1, unit:'V'},
+  '24h':  {elId:'v-24h',    editElId:'edit-24h',    min:1,    max:23,   step:1,   unit:'H'},
+};
+
+let cur = 0, inEdit = false, editKey = '', editVal = 0;
+let loadOn = true;
+let battSel = 0, wmSel = 0;
+let menuTimer = null, menuLongFired = false;
+
+// ── helpers ──────────────────────────────────────────────
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('s-' + id).classList.add('active');
+  updateArrows(id);
+}
+
+function updateArrows(screenId) {
+  const pvFlow    = document.getElementById('pv-flow');
+  const loadFlow  = document.getElementById('load-flow');
+  const solarWrap = document.getElementById('solar-wrap');
+  const loadWrap  = document.getElementById('load-wrap');
+
+  // reset all visible, no animation, no thick
+  [pvFlow, loadFlow, solarWrap, loadWrap].forEach(el => {
+    el.classList.remove('hidden');
+    el.style.visibility = '';
+  });
+  pvFlow.querySelectorAll('.arr').forEach(a => a.classList.remove('thick','lit'));
+  loadFlow.querySelectorAll('.arr').forEach(a => a.classList.remove('thick','lit'));
+
+  if (screenId === 'main') {
+    // left arrow blink controlled by simulation
+    // restore load visibility based on current loadOn state
+    if (!loadOn) {
+      loadFlow.style.visibility = 'hidden';
+      loadWrap.style.visibility = 'hidden';
+    }
+
+  } else if (screenId === 'float') {
+    // battery + thick left arrow only — hide solar, hide right arrow, hide bulb
+    solarWrap.classList.add('hidden');
+    loadFlow.classList.add('hidden');
+    loadWrap.classList.add('hidden');
+    pvFlow.querySelectorAll('.arr').forEach(a => a.classList.add('thick'));
+
+  } else if (screenId === 'drecon') {
+    // battery + thick right arrow + bulb — hide solar, hide left arrow only
+    solarWrap.classList.add('hidden');
+    pvFlow.classList.add('hidden');
+    loadFlow.querySelectorAll('.arr').forEach(a => a.classList.add('thick'));
+
+  } else if (screenId === 'dstop') {
+    // battery only — hide solar, arrows, bulb
+    solarWrap.classList.add('hidden');
+    pvFlow.classList.add('hidden');
+    loadFlow.classList.add('hidden');
+    loadWrap.classList.add('hidden');
+
+  } else {
+    // 24h, batt — battery only, hide everything else
+    solarWrap.classList.add('hidden');
+    pvFlow.classList.add('hidden');
+    loadFlow.classList.add('hidden');
+    loadWrap.classList.add('hidden');
+  }
+}
+
+function selectChoice(groupPrefix, count, idx) {
+  for (let i = 0; i < count; i++) {
+    document.getElementById(groupPrefix + i).classList.toggle('sel', i === idx);
+  }
+}
+
+function setEditMode(on) {
+  // blink the big number directly on the active param screen
+  const cfg = EDITABLE[editKey];
+  if (!cfg) return;
+  const row = document.getElementById(cfg.editElId);
+  if (on) {
+    row.classList.add('editing');
+    // update hint text
+    const hint = document.getElementById('hint-' + editKey);
+    if (hint) hint.textContent = '▲ UP  ▼ DOWN  ·  LONG MENU = SAVE';
+  } else {
+    row.classList.remove('editing');
+    const hint = document.getElementById('hint-' + editKey);
+    if (hint) hint.textContent = editKey === '24h'
+      ? 'Long press MENU to edit · UP/DOWN to set'
+      : 'Long press MENU to edit';
+  }
+}
+
+// ── button logic ─────────────────────────────────────────
+function menuShort() {
+  if (inEdit) return;
+  const s = SCREENS[cur];
+  // batt/work: confirm and go home
+  if (s === 'batt') { cur = 0; showScreen('main'); return; }
+  cur = (cur + 1) % SCREENS.length;
+  showScreen(SCREENS[cur]);
+}
+
+function menuLong() {
+  const s = SCREENS[cur];
+  if (!inEdit && EDITABLE[s]) {
+    inEdit = true;
+    editKey = s;
+    const cfg = EDITABLE[editKey];
+    const raw = document.getElementById(cfg.elId).textContent;
+    editVal = parseFloat(raw);
+    setEditMode(true);
+    // stay on same screen — blink indicates edit mode
+  } else if (inEdit) {
+    // save & exit edit
+    const cfg = EDITABLE[editKey];
+    const fmt = cfg.unit === 'H' ? String(Math.round(editVal)) : editVal.toFixed(1);
+    document.getElementById(cfg.elId).textContent = fmt;
+    inEdit = false;
+    setEditMode(false);
+  }
+}
+
+function upPress() {
+  if (!inEdit) {
+    const s = SCREENS[cur];
+    if (s === 'batt') { battSel = Math.max(0, battSel - 1); selectChoice('bc-', 3, battSel); }
+    if (s === 'work') { wmSel   = Math.max(0, wmSel   - 1); selectChoice('wc-', 3, wmSel);   }
+    return;
+  }
+  const cfg = EDITABLE[editKey];
+  editVal = Math.min(editVal + cfg.step, cfg.max);
+  editVal = cfg.unit === 'H' ? Math.round(editVal) : Math.round(editVal * 10) / 10;
+  document.getElementById(cfg.elId).textContent = cfg.unit === 'H' ? String(editVal) : editVal.toFixed(1);
+}
+
+function downPress() {
+  if (!inEdit) {
+    const s = SCREENS[cur];
+    if (s === 'main') {
+      loadOn = !loadOn;
+      document.getElementById('bulb').className = 'bulb' + (loadOn ? '' : ' off');
+      document.getElementById('load-lbl').textContent = loadOn ? 'ON' : 'OFF';
+      document.getElementById('load-flow').style.visibility = loadOn ? '' : 'hidden';
+      document.getElementById('load-wrap').style.visibility = loadOn ? '' : 'hidden';
+      updateArrows('main');
+      return;
+    }
+    if (s === 'batt') { battSel = Math.min(2, battSel + 1); selectChoice('bc-', 3, battSel); }
+    if (s === 'work') { wmSel   = Math.min(2, wmSel   + 1); selectChoice('wc-', 3, wmSel);   }
+    return;
+  }
+  const cfg = EDITABLE[editKey];
+  editVal = Math.max(editVal - cfg.step, cfg.min);
+  editVal = cfg.unit === 'H' ? Math.round(editVal) : Math.round(editVal * 10) / 10;
+  document.getElementById(cfg.elId).textContent = cfg.unit === 'H' ? String(editVal) : editVal.toFixed(1);
+}
+
+// ── button events ─────────────────────────────────────────
+const menuBtn  = document.getElementById('btn-menu');
+const menuRing = document.getElementById('menu-ring');
+const ringCirc = document.getElementById('ring-circle');
+
+menuBtn.addEventListener('pointerdown', () => {
+  menuLongFired = false;
+  menuRing.classList.add('pressing');
+  menuTimer = setTimeout(() => {
+    menuLongFired = true;
+    menuRing.classList.remove('pressing');
+    menuLong();
+  }, 700);
+});
+menuBtn.addEventListener('pointerup', () => {
+  clearTimeout(menuTimer);
+  menuRing.classList.remove('pressing');
+  if (!menuLongFired) menuShort();
+});
+menuBtn.addEventListener('pointerleave', () => {
+  clearTimeout(menuTimer);
+  menuRing.classList.remove('pressing');
+});
+
+document.getElementById('btn-up').addEventListener('click', upPress);
+document.getElementById('btn-down').addEventListener('click', downPress);
+
+// ── Simulation ────────────────────────────────────────────
+let soc = 72, pvA = 2.9, bV = 13.4;
+const simStart = Date.now();
+
+function updateBattBars(s) {
+  const pct = s / 100;
+  const heights = [
+    Math.round(Math.min(1, pct / .25) * 16),
+    Math.round(Math.min(1, Math.max(0, (pct - .25) / .25)) * 16),
+    Math.round(Math.min(1, Math.max(0, (pct - .50) / .25)) * 16),
+    Math.round(Math.min(1, Math.max(0, (pct - .75) / .25)) * 16),
+  ];
+  ['b1','b2','b3','b4'].forEach((id, i) => {
+    document.getElementById(id).style.height = Math.max(3, heights[i]) + 'px';
+  });
+}
+
+setInterval(() => {
+  // oscillate bV around 13.7 on a ~30s sine cycle so float trips on/off
+  const t = (Date.now() - simStart) / 1000;
+  bV = 13.7 + Math.sin((t / 30) * 2 * Math.PI) * 0.4;
+  bV = Math.round(bV * 10) / 10;
+
+  // soc follows bV loosely
+  soc = Math.max(15, Math.min(100, 60 + (bV - 13.3) * 25));
+
+  document.getElementById('v-main').textContent  = bV.toFixed(1);
+  document.getElementById('soc-lbl').textContent = Math.round(soc) + '%';
+  updateBattBars(soc);
+
+  // left arrow blinks only when bV >= float voltage
+  const floatV = parseFloat(document.getElementById('v-float').textContent);
+  const charging = bV >= floatV;
+  document.getElementById('pv-flow').querySelectorAll('.arr').forEach(a => {
+    a.classList.toggle('lit', charging);
+  });
+
+  // solar glow when above float
+  document.getElementById('solar-grid').className = charging ? 'solar-grid solar-active' : 'solar-grid';
+}, 2000);
+
+updateBattBars(soc);
+</script>
+</body>
+</html>
+  
