@@ -1,1 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0">
+<title>AC Remote — Gnoke Skin</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{
+  min-height:100%;background:#d0d0d0;
+  display:flex;justify-content:center;align-items:flex-start;
+  font-family:'Courier New',monospace;
+}
 
+/* Mobile: full screen. Tablet/PC: centered card */
+.skin{
+  width:100%;
+  max-width:420px;
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  background:#d0d0d0;
+}
+
+@media(min-width:480px){
+  html,body{align-items:center;padding:32px 0 48px}
+  .skin{
+    min-height:unset;
+    width:380px;
+    border-radius:28px;
+    overflow:hidden;
+    box-shadow:0 12px 48px rgba(0,0,0,.28);
+  }
+}
+
+.device-label{text-align:center;font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:#888;padding:14px 0 8px}
+
+/* LCD shell */
+.lcd-shell{
+  background:#8a9070;
+  padding:8px 8px 0;
+}
+.lcd{
+  background:#b8c2a0;
+  padding:16px 18px 18px;
+  display:flex;flex-direction:column;gap:10px;
+  box-shadow:inset 0 0 22px rgba(0,0,0,.18);
+  position:relative;overflow:hidden;
+}
+.lcd::before{
+  content:'';position:absolute;inset:0;
+  background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,.03) 3px,rgba(0,0,0,.03) 4px);
+  pointer-events:none;z-index:1;
+}
+.status-row{display:flex;align-items:center;justify-content:space-between}
+.pwr-dot{width:11px;height:11px;border-radius:50%;border:1.5px solid #2a2a1a;background:#6a7858;transition:background .2s;flex-shrink:0}
+.pwr-dot.on{background:#2a2a1a}
+.mode-block{display:flex;flex-direction:column;align-items:center;gap:2px}
+.mode-ico{font-size:22px;line-height:1}
+.mode-lbl{font-size:9px;letter-spacing:.16em;color:#3a3a2a;text-transform:uppercase;font-weight:bold}
+.fan-block{display:flex;flex-direction:column;align-items:center;gap:3px}
+.fan-bars{display:flex;align-items:flex-end;gap:3px;height:18px}
+.fan-bar{width:5px;background:#2a2a1a;border-radius:1px;transition:height .2s}
+.fan-lbl{font-size:9px;letter-spacing:.1em;color:#4a4a3a;text-transform:uppercase}
+.temp-row{display:flex;align-items:baseline;justify-content:center;gap:4px}
+.big-num{font-size:clamp(72px,22vw,96px);font-weight:bold;color:#1a1a0e;line-height:1;letter-spacing:-.02em}
+.big-unit{font-size:22px;color:#3a3a2a}
+.info-row{display:flex;justify-content:space-between;border-top:.5px solid rgba(0,0,0,.12);padding-top:8px}
+.info-item{display:flex;flex-direction:column;align-items:center;gap:2px}
+.info-k{font-size:8px;letter-spacing:.14em;color:#5a5a4a;text-transform:uppercase}
+.info-v{font-size:12px;font-weight:bold;color:#1a1a0e}
+
+/* gap strip */
+.gap-strip{height:16px;background:#c8cfc0}
+
+/* Button shell */
+.btn-shell{
+  background:#ebe8e0;
+  flex:1;
+  padding:16px 14px 28px;
+  border:1px solid #ccc;
+  border-top:none;
+}
+.sec-lbl{font-size:11px;font-weight:700;text-transform:uppercase;color:#333;text-align:center;margin-bottom:8px}
+
+/* power */
+.power-zone{display:flex;justify-content:center;margin-bottom:16px}
+.power-btn{
+  width:56px;height:56px;border-radius:50%;
+  background:#ebe8e0;color:#111;border:1px solid #ccc;
+  font-family:'Courier New',monospace;font-size:11px;font-weight:700;text-transform:uppercase;
+  cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
+  box-shadow:0 4px 0 #bbb,0 5px 8px rgba(0,0,0,.12);
+  transition:transform .08s,box-shadow .08s,background .1s,color .1s;
+  -webkit-tap-highlight-color:transparent;user-select:none;touch-action:manipulation;
+}
+.power-btn:active{transform:translateY(4px);box-shadow:0 1px 0 #bbb}
+.power-btn.on{background:#ff3a3a;color:#fff;border-color:#ff3a3a;box-shadow:0 4px 0 #a01010}
+.power-btn.on:active{box-shadow:0 1px 0 #a01010}
+.power-btn .ico{font-size:20px;line-height:1}
+
+/* temp */
+.temp-zone{display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:16px}
+.temp-btn{
+  width:64px;height:44px;border-radius:10px;
+  background:#ebe8e0;color:#111;border:1px solid #ccc;font-size:20px;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  box-shadow:0 4px 0 #bbb,0 5px 8px rgba(0,0,0,.1);
+  transition:transform .08s,box-shadow .08s;
+  -webkit-tap-highlight-color:transparent;user-select:none;touch-action:manipulation;
+}
+.temp-btn:active{transform:translateY(4px);box-shadow:0 1px 0 #bbb}
+.temp-mid{font-size:10px;color:#555;letter-spacing:.08em;text-transform:uppercase;text-align:center;width:40px;line-height:1.5;font-weight:700}
+
+/* grids */
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px;width:100%}
+.g-btn{
+  background:#e8e4db;color:#111;border:1px solid #ccc;border-radius:10px;
+  padding:10px 4px 8px;
+  font-family:'Courier New',monospace;font-size:11px;font-weight:700;text-transform:uppercase;
+  cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:5px;
+  box-shadow:0 3px 0 #bbb,0 4px 6px rgba(0,0,0,.08);
+  transition:transform .08s,box-shadow .08s,color .1s,background .1s,border-color .1s;
+  -webkit-tap-highlight-color:transparent;user-select:none;
+  min-width:0;touch-action:manipulation;
+}
+.g-btn:active{transform:translateY(3px);box-shadow:0 1px 0 #bbb}
+.g-btn.active{background:#e8f0e0;color:#2a4a1a;border-color:#a8c898;box-shadow:0 3px 0 #8aa870}
+.g-btn .ico{font-size:18px;line-height:1}
+
+/* utils — 3 across */
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.u-btn{
+  background:#e8e4db;color:#111;border:1px solid #ccc;border-radius:10px;
+  padding:12px 4px;
+  font-family:'Courier New',monospace;font-size:11px;font-weight:700;text-transform:uppercase;
+  cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:5px;
+  box-shadow:0 3px 0 #bbb,0 4px 6px rgba(0,0,0,.08);
+  transition:transform .08s,box-shadow .08s,color .1s,background .1s,border-color .1s;
+  -webkit-tap-highlight-color:transparent;user-select:none;
+  min-width:0;touch-action:manipulation;
+}
+.u-btn:active{transform:translateY(3px);box-shadow:0 1px 0 #bbb}
+.u-btn.active{background:#e8f0e0;color:#2a4a1a;border-color:#a8c898;box-shadow:0 3px 0 #8aa870}
+.u-btn .ico{font-size:18px;line-height:1}
+</style>
+</head>
+<body>
+<div class="skin">
+  <div class="device-label">Generic AC — Gnoke Remote</div>
+
+  <div class="lcd-shell">
+    <div class="lcd">
+      <div class="status-row">
+        <div class="pwr-dot" id="pwr-dot"></div>
+        <div class="mode-block">
+          <div class="mode-ico" id="mode-ico">❄️</div>
+          <div class="mode-lbl" id="mode-lbl">Cool</div>
+        </div>
+        <div class="fan-block">
+          <div class="fan-bars">
+            <div class="fan-bar" id="fb1" style="height:4px"></div>
+            <div class="fan-bar" id="fb2" style="height:4px"></div>
+            <div class="fan-bar" id="fb3" style="height:4px"></div>
+            <div class="fan-bar" id="fb4" style="height:4px"></div>
+          </div>
+          <div class="fan-lbl" id="fan-lbl">Auto</div>
+        </div>
+      </div>
+      <div class="temp-row">
+        <span class="big-num" id="temp-num">22</span>
+        <span class="big-unit">°C</span>
+      </div>
+      <div class="info-row">
+        <div class="info-item"><span class="info-k">Sleep</span><span class="info-v" id="sleep-val">Off</span></div>
+        <div class="info-item"><span class="info-k">Timer</span><span class="info-v" id="timer-val">—</span></div>
+        <div class="info-item"><span class="info-k">Swing</span><span class="info-v" id="swing-val">Off</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="gap-strip"></div>
+
+  <div class="btn-shell">
+
+    <div class="power-zone">
+      <button class="power-btn" id="power-btn">
+        <span class="ico">⏻</span>pwr
+      </button>
+    </div>
+
+    <div class="sec-lbl">Temperature</div>
+    <div class="temp-zone">
+      <button class="temp-btn" id="btn-down">▼</button>
+      <div class="temp-mid">set °C</div>
+      <button class="temp-btn" id="btn-up">▲</button>
+    </div>
+
+    <div class="sec-lbl">Mode</div>
+    <div class="grid4">
+      <button class="g-btn active" data-mode="Cool" data-ico="❄️"><span class="ico">❄️</span>cool</button>
+      <button class="g-btn" data-mode="Heat" data-ico="🔆"><span class="ico">🔆</span>heat</button>
+      <button class="g-btn" data-mode="Fan" data-ico="💨"><span class="ico">💨</span>fan</button>
+      <button class="g-btn" data-mode="Dry" data-ico="💧"><span class="ico">💧</span>dry</button>
+    </div>
+
+    <div class="sec-lbl">Fan speed</div>
+    <div class="grid4">
+      <button class="g-btn fan-s active" data-fan="Auto" data-bars="2,4,7,11"><span class="ico">⇅</span>auto</button>
+      <button class="g-btn fan-s" data-fan="Low" data-bars="4,4,4,4"><span class="ico">◌</span>low</button>
+      <button class="g-btn fan-s" data-fan="Med" data-bars="4,6,9,9"><span class="ico">◎</span>med</button>
+      <button class="g-btn fan-s" data-fan="High" data-bars="4,8,11,14"><span class="ico">●</span>high</button>
+    </div>
+
+    <div class="sec-lbl">Options</div>
+    <div class="grid3">
+      <button class="u-btn" id="sleep-btn"><span class="ico">🌙</span>sleep</button>
+      <button class="u-btn" id="timer-btn"><span class="ico">⏱</span><span id="timer-lbl">timer</span></button>
+      <button class="u-btn" id="swing-btn"><span class="ico">↕</span><span id="swing-lbl">swing</span></button>
+    </div>
+
+  </div>
+</div>
+
+<script>
+let isOn=false,temp=22,sleepOn=false,timerIdx=0,swingIdx=0;
+const timerOpts=[0,1,2,4,8];
+const swingOpts=['Off','Horiz','Vert','Auto'];
+const swingIcos=['↕','↔','↕','✦'];
+
+document.getElementById('power-btn').addEventListener('click',()=>{
+  isOn=!isOn;
+  document.getElementById('power-btn').classList.toggle('on',isOn);
+  document.getElementById('pwr-dot').classList.toggle('on',isOn);
+});
+
+document.getElementById('btn-up').addEventListener('click',()=>{
+  if(temp<30){temp++;document.getElementById('temp-num').textContent=temp;}
+});
+document.getElementById('btn-down').addEventListener('click',()=>{
+  if(temp>16){temp--;document.getElementById('temp-num').textContent=temp;}
+});
+
+document.querySelectorAll('[data-mode]').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('[data-mode]').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('mode-ico').textContent=btn.dataset.ico;
+    document.getElementById('mode-lbl').textContent=btn.dataset.mode;
+  });
+});
+
+document.querySelectorAll('.fan-s').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.fan-s').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('fan-lbl').textContent=btn.dataset.fan;
+    btn.dataset.bars.split(',').map(Number).forEach((h,i)=>{
+      document.getElementById('fb'+(i+1)).style.height=h+'px';
+    });
+  });
+});
+
+document.getElementById('sleep-btn').addEventListener('click',()=>{
+  sleepOn=!sleepOn;
+  document.getElementById('sleep-btn').classList.toggle('active',sleepOn);
+  document.getElementById('sleep-val').textContent=sleepOn?'On':'Off';
+});
+
+document.getElementById('timer-btn').addEventListener('click',()=>{
+  timerIdx=(timerIdx+1)%timerOpts.length;
+  const h=timerOpts[timerIdx];
+  document.getElementById('timer-lbl').textContent=h===0?'timer':h+'h';
+  document.getElementById('timer-btn').classList.toggle('active',h>0);
+  document.getElementById('timer-val').textContent=h===0?'—':h+'h';
+});
+
+document.getElementById('swing-btn').addEventListener('click',()=>{
+  swingIdx=(swingIdx+1)%swingOpts.length;
+  const s=swingOpts[swingIdx];
+  const ico=swingIcos[swingIdx];
+  document.getElementById('swing-btn').querySelector('.ico').textContent=ico;
+  document.getElementById('swing-lbl').textContent=s.toLowerCase();
+  document.getElementById('swing-btn').classList.toggle('active',swingIdx>0);
+  document.getElementById('swing-val').textContent=s;
+});
+</script>
+</body>
+</html>
+  
