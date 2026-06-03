@@ -4,7 +4,7 @@ UI skins for hardware devices. One `config.js`. Any device.
 
 Each skin is a single `index.html` file. Point it at your device's JSON endpoint and it works — no framework, no install, no firmware changes.
 
-**Live demo:** [edmundsparrow.github.io/gnoke-skin/pwm1](https://edmundsparrow.github.io/gnoke-skin/pwm1)  
+**Live demo:** [edmundsparrow.github.io/gnoke-skins/pwm1](https://edmundsparrow.github.io/gnoke-skins/pwm1)  
 **Site:** [gnoke-skins.netlify.app](https://gnoke-skins.netlify.app)
 
 ## How it works
@@ -27,4 +27,4 @@ Your device broadcasts state as JSON. `config.js` maps the keys. The skin render
 
 ## Licence
 
-MIT
+MIT BSL
