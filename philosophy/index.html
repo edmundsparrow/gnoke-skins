@@ -1,1 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Philosophy — gnoke-skins</title>
+  <meta name="description" content="config.js is the standard. Skins are the interface. Any device that aligns with the Gnoke contract can use any skin — forever.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Fraunces:opsz,wght@9..144,400;9..144,700;9..144,800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../theme.css">
+  <style>
+    /* ── config.js showcase ────────────────────────────── */
+    .config-showcase {
+      background: var(--bg3);
+      border: 0.5px solid var(--border2);
+      border-radius: var(--rlg);
+      overflow: hidden;
+      margin: 2.5rem 0;
+    }
+    .config-header {
+      padding: 0.75rem 1.25rem;
+      border-bottom: 0.5px solid var(--border);
+      background: var(--bg4);
+      font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--text3);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .config-header b { color: var(--accent); }
+    .config-badge {
+      font-size: 9px; letter-spacing: 0.1em;
+      background: rgba(91,164,207,0.12); color: var(--accent);
+      padding: 2px 8px; border-radius: 3px; text-transform: uppercase;
+    }
+    .config-showcase pre {
+      padding: 1.5rem 1.25rem;
+      font-size: 12px;
+      line-height: 1.8;
+      color: var(--text2);
+      overflow-x: auto;
+    }
+    .config-showcase pre .k  { color: var(--text3); }
+    .config-showcase pre .v  { color: var(--accent); }
+    .config-showcase pre .s  { color: var(--green); }
+    .config-showcase pre .c  { color: var(--text3); font-style: italic; }
 
+    /* ── Contract grid ─────────────────────────────────── */
+    .contract-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin: 2rem 0;
+    }
+    .contract-card {
+      background: var(--bg3);
+      border: 0.5px solid var(--border2);
+      border-radius: var(--rlg);
+      overflow: hidden;
+    }
+    .contract-card-header {
+      padding: 0.75rem 1.25rem;
+      border-bottom: 0.5px solid var(--border);
+      background: var(--bg4);
+      font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--text3);
+      display: flex; align-items: center; gap: 0.5rem;
+    }
+    .contract-card-header b { color: var(--accent); }
+    .contract-card pre {
+      padding: 1.25rem;
+      font-size: 12px;
+      line-height: 1.7;
+      color: var(--text2);
+      overflow-x: auto;
+    }
+    .contract-card pre .k  { color: var(--text3); }
+    .contract-card pre .v  { color: var(--accent); }
+    .contract-card pre .s  { color: var(--green); }
+
+    /* ── Firebase analogy callout ──────────────────────── */
+    .analogy-callout {
+      border-left: 2px solid var(--accent);
+      padding: 1.25rem 1.5rem;
+      background: rgba(91,164,207,0.04);
+      border-radius: 0 var(--r) var(--r) 0;
+      margin: 2.5rem 0;
+    }
+    .analogy-callout p {
+      font-size: 0.9rem; color: var(--text2); line-height: 1.7;
+      margin: 0;
+    }
+    .analogy-callout p + p { margin-top: 0.6rem; }
+
+    /* ── Feature grid ──────────────────────────────────── */
+    .feats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      border: 0.5px solid var(--border);
+      border-radius: var(--rlg);
+      overflow: hidden;
+      margin-top: 2.5rem;
+    }
+    .feat {
+      padding: 1.75rem;
+      border-right: 0.5px solid var(--border);
+      border-bottom: 0.5px solid var(--border);
+      transition: background 0.2s;
+    }
+    .feat:hover { background: rgba(180, 210, 255, 0.03); }
+    .feat-num {
+      font-size: 10px; color: var(--accent);
+      letter-spacing: 0.1em; margin-bottom: 0.75rem;
+    }
+    .feat p { font-size: 0.8rem; color: var(--text2); line-height: 1.65; }
+
+    @media (max-width: 640px) {
+      .contract-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="site-nav">
+    <a class="nav-logo" href="../">gnoke<span>-skins</span></a>
+    <div class="nav-links">
+      <a href="../philosophy/">Philosophy</a>
+      <a href="../skins/">Skins</a>
+      <a href="../pricing/">Pricing</a>
+      <a href="../pricing/" class="nav-cta">Get started</a>
+    </div>
+    <button class="nav-hamburger" aria-label="Open menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+  <div class="nav-drawer">
+    <a href="../philosophy/">Philosophy</a>
+    <a href="../skins/">Skins</a>
+    <a href="../pricing/">Pricing</a>
+    <a href="../pricing/">Get started →</a>
+  </div>
+
+  <main>
+
+    <!-- PAGE HERO -->
+    <div class="page-hero">
+      <div class="page-hero-inner">
+        <div class="tag">Philosophy</div>
+        <h1>The config.js standard</h1>
+        <p class="lead">
+          We design the skins. You own the device logic. <code>config.js</code> is the
+          handshake between them — one small file that makes any Gnoke skin work
+          with any hardware that speaks JSON.
+        </p>
+      </div>
+    </div>
+
+    <!-- ANALOGY -->
+    <div class="section">
+      <div class="analogy-callout">
+        <p>Think of <code>config.js</code> the way you think of Firebase's SDK initialisation — one standard connection file that any app can import to talk to the backend. You don't rewrite the app every time you change the backend. You just update the config.</p>
+        <p>Same idea here. You don't redesign the UI when you swap devices. You update <code>config.js</code>. The skin just works.</p>
+      </div>
+
+      <!-- CONFIG.JS SHOWCASE -->
+      <div class="tag">The standard file</div>
+      <h2>Everything lives in config.js</h2>
+      <p class="lead" style="margin-top:0.75rem">
+        One file. Declare your device address, the data keys it broadcasts, and the commands it accepts. That's the entire integration surface.
+      </p>
+
+      <div class="config-showcase">
+        <div class="config-header">
+          <b>config.js</b> — the only file you ever touch
+          <span class="config-badge">Edit once. Works everywhere.</span>
+        </div>
+        <pre><span class="c">// 1. Where is your device?</span>
+<span class="k">export const</span> device = {
+  <span class="k">host:</span>     <span class="s">"ws://192.168.1.42"</span>,   <span class="c">// WebSocket or HTTP</span>
+  <span class="k">protocol:</span> <span class="s">"ws"</span>,               <span class="c">// "ws" | "http"</span>
+  <span class="k">pollMs:</span>   <span class="v">500</span>                <span class="c">// polling interval if HTTP</span>
+};
+
+<span class="c">// 2. What data does it broadcast?</span>
+<span class="k">export const</span> state = {
+  <span class="k">duty:</span>        { <span class="k">label:</span> <span class="s">"Duty cycle"</span>, <span class="k">unit:</span> <span class="s">"%"</span>,  <span class="k">min:</span> <span class="v">0</span>, <span class="k">max:</span> <span class="v">100</span> },
+  <span class="k">frequency:</span>   { <span class="k">label:</span> <span class="s">"Frequency"</span>,  <span class="k">unit:</span> <span class="s">"Hz"</span> },
+  <span class="k">temperature:</span> { <span class="k">label:</span> <span class="s">"Temp"</span>,        <span class="k">unit:</span> <span class="s">"°C"</span> }
+};
+
+<span class="c">// 3. What commands does it accept?</span>
+<span class="k">export const</span> commands = {
+  <span class="k">setDuty:</span>    { <span class="k">label:</span> <span class="s">"Set duty"</span>,   <span class="k">param:</span> <span class="s">"value"</span> },
+  <span class="k">loadPreset:</span> { <span class="k">label:</span> <span class="s">"Load preset"</span>, <span class="k">param:</span> <span class="s">"value"</span> }
+};
+
+<span class="c">// 4. Any preset shortcuts?</span>
+<span class="k">export const</span> presets = [
+  { <span class="k">id:</span> <span class="s">"lathe"</span>, <span class="k">label:</span> <span class="s">"Lathe"</span>, <span class="k">duty:</span> <span class="v">45</span> },
+  { <span class="k">id:</span> <span class="s">"pump"</span>,  <span class="k">label:</span> <span class="s">"Pump"</span>,  <span class="k">duty:</span> <span class="v">80</span> }
+];</pre>
+      </div>
+
+      <!-- DEVICE ALIGNMENT -->
+      <div class="tag" style="margin-top:3rem">The contract</div>
+      <h2>Your device just needs to align</h2>
+      <p class="lead" style="margin-top:0.75rem">
+        Any device that sends and receives these two JSON shapes can use any Gnoke skin. The backend is yours — we only care about the interface.
+      </p>
+
+      <div class="contract-grid">
+        <div class="contract-card">
+          <div class="contract-card-header"><b>Device → Skin</b> &nbsp;·&nbsp; state broadcast</div>
+          <pre>{
+  <span class="k">"duty":</span>        <span class="v">75</span>,
+  <span class="k">"frequency":</span>  <span class="v">1200</span>,
+  <span class="k">"temperature":</span> <span class="v">34</span>
+}</pre>
+        </div>
+        <div class="contract-card">
+          <div class="contract-card-header"><b>Skin → Device</b> &nbsp;·&nbsp; command dispatch</div>
+          <pre>{
+  <span class="k">"action":</span> <span class="s">"setDuty"</span>,
+  <span class="k">"value":</span>  <span class="v">80</span>
+}
+
+<span class="k">// or</span>
+{
+  <span class="k">"action":</span> <span class="s">"loadPreset"</span>,
+  <span class="k">"value":</span>  <span class="s">"lathe"</span>
+}</pre>
+        </div>
+      </div>
+
+      <p style="font-size:0.8rem;color:var(--text3);line-height:1.7">
+        That's it. Two JSON shapes. The device backend is entirely your concern —
+        we make no assumptions about how it's implemented. ESP32, Pi, cloud API, Node server —
+        any of them work as long as they speak this contract.
+      </p>
+    </div>
+
+    <!-- PRINCIPLES -->
+    <div class="page-border">
+    <div class="section">
+      <div class="tag">Principles</div>
+      <h2>Six rules we don't break</h2>
+      <div class="feats">
+        <div class="feat" style="border-left: 2px solid var(--green); border-radius: 0 var(--r) var(--r) 0;">
+          <div class="feat-num">00</div>
+          <h3>The skin is yours — fully</h3>
+          <p>All skins are released under the <strong>MIT licence</strong> — download, modify, brand, and ship in your own product. No fees, no attribution required. The point is low entry: grab a working UI and make it your own.</p>
+        </div>
+        <div class="feat">
+          <div class="feat-num">01</div>
+          <h3>config.js is the only integration point</h3>
+          <p>The skin never knows about your hardware. It only reads <code>config.js</code>. Swap the device, update the config — the skin is untouched.</p>
+        </div>
+        <div class="feat">
+          <div class="feat-num">02</div>
+          <h3>One file, zero dependencies</h3>
+          <p>A skin ships as a single <code>index.html</code>. No build step. No npm. No internet required. Copy it anywhere and open it.</p>
+        </div>
+        <div class="feat">
+          <div class="feat-num">03</div>
+          <h3>Skins are interchangeable</h3>
+          <p>Industrial touchscreen today, mobile browser tomorrow. Same <code>config.js</code> — completely different skin. No rewiring needed.</p>
+        </div>
+        <div class="feat">
+          <div class="feat-num">04</div>
+          <h3>The UI doesn't live on the device</h3>
+          <p>Phone, tablet, desktop browser, touchscreen — the skin runs anywhere with a browser. Your device just handles logic and JSON.</p>
+        </div>
+        <div class="feat">
+          <div class="feat-num">05</div>
+          <h3>Offline-first always</h3>
+          <p>Last-known state is cached locally. Disconnect the device — the skin still shows the last reading instantly.</p>
+        </div>
+        <div class="feat">
+          <div class="feat-num">06</div>
+          <h3>Technician-readable in 10 minutes</h3>
+          <p>If someone can't understand what a skin is doing in under 10 minutes, it's too complex. That's a bug we fix.</p>
+        </div>
+      </div>
+    </div>
+    </div>
+
+    <!-- CTA -->
+    <div class="cta-band">
+      <div class="tag center">Next step</div>
+      <h2>See it in practice.</h2>
+      <p>Browse the ready-made skins or go straight to pricing.</p>
+      <div class="cta-buttons">
+        <a class="btn btn-primary" href="../skins/">Browse skins</a>
+        <a class="btn btn-ghost"   href="../pricing/">See pricing</a>
+      </div>
+    </div>
+
+  </main>
+
+  <footer class="site-footer">
+    <span>gnoke-skins.netlify.app</span>
+    <nav>
+      <a href="../philosophy/">Philosophy</a>
+      <a href="../skins/">Skins</a>
+      <a href="../pricing/">Pricing</a>
+    </nav>
+    <span>© Gnoke 2025 – 2026 · MIT licence</span>
+  </footer>
+
+  <script src="../nav.js"></script>
+</body>
+</html>
