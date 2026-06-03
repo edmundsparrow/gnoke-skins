@@ -1,1 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0">
+<title>Gnoke MiFi</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#d0d0d0;font-family:'Courier New',monospace;min-height:100vh;display:flex;justify-content:center;align-items:center}
+.skin{width:100%;max-width:380px;padding:20px}
+.device-label{text-align:center;font-size:10px;letter-spacing:.22em;color:#888;margin-bottom:10px}
+.lcd-shell{background:#8a9070;padding:10px;border-radius:8px;box-shadow:0 14px 40px rgba(0,0,0,.25), inset 0 1px 0 rgba(255,255,255,.15)}
+.lcd{background:#b8c2a0;min-height:360px;position:relative;overflow:hidden;box-shadow:inset 0 0 22px rgba(0,0,0,.18)}
+.lcd::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,.03) 3px,rgba(0,0,0,.03) 4px);pointer-events:none}
+.boot-screen,.main-screen,.settings-screen{position:absolute;inset:0;padding:16px}
+.boot-screen{display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center}
+.boot-word{font-size:18px;font-weight:bold;letter-spacing:.2em;color:#1a1a0e;transition:all .6s ease}
+.hidden{display:none}
+.boot-dots{display:flex;gap:8px;margin-top:22px}
+.dot{width:8px;height:8px;border-radius:50%;background:#2f3f28;animation:pulse 1.2s infinite}
+@keyframes pulse{0%,100%{opacity:.2}50%{opacity:1}}
+.main-screen,.settings-screen{display:none}
+.status-row{position:relative;display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;min-height:15px}
+.users-count{position:absolute;left:50%;transform:translateX(-50%);font-size:11px;font-weight:bold}
+.icon-group{display:flex;gap:6px;align-items:center}
+.sig-bars{display:flex;align-items:flex-end;gap:2px;height:12px}
+.bar{width:3px;background:#1a1a0e}
+.battery-shell{width:18px;height:9px;border:1.2px solid #1a1a0e;padding:1px;position:relative}
+.battery-shell::after{content:'';position:absolute;right:-3px;top:1.5px;width:2px;height:3px;background:#1a1a0e}
+.battery-fill{width:70%;height:100%;background:#1a1a0e}
+.brand-title{text-align:center;font-size:36px;font-weight:bold;color:#1a1a0e;margin-top:20px}
+.usage-row{text-align:center;margin-top:10px;font-size:14px;color:#454530}
 
+/* Settings toolbar row */
+.settings-toolbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid #6a7a60;transition:opacity .2s}
+.settings-toolbar.hidden-toolbar{opacity:0;pointer-events:none}
+.toolbar-btn{width:28px;height:28px;display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative;-webkit-tap-highlight-color:transparent;user-select:none;font-size:15px}
+.toolbar-btn svg{position:absolute;inset:0;width:100%;height:100%;transform:rotate(-90deg);pointer-events:none}
+.toolbar-btn circle{fill:none;stroke:#1a1a0e;stroke-width:2;stroke-dasharray:76;stroke-dashoffset:76}
+.toolbar-btn.pressing circle{transition:stroke-dashoffset 5s linear;stroke-dashoffset:0}
+.toolbar-label{font-size:9px;letter-spacing:.15em;color:#454530;font-weight:bold}
+
+.settings-screen{padding:14px}
+.settings-content{margin-top:0}
+.settings-screen h3{font-size:14px;margin-bottom:5px;color:#1a1a0e;padding:2px}
+.settings-screen h3.active{background:#8a9070;color:#fff}
+.settings-screen input, .settings-screen select{width:100%;padding:4px;background:#aab295;border:1px solid #1a1a0e;font-family:inherit;margin-bottom:10px;opacity:0.6}
+.settings-screen input.active, .settings-screen select.active{opacity:1;border:2px solid #000}
+.t9-pad{display:grid;grid-template-columns:repeat(3, 1fr);gap:6px;margin-bottom:10px}
+.t9-btn{background:#aab295;border:1px solid #1a1a0e;padding:9px 4px;text-align:center;cursor:pointer;font-size:12px;font-weight:bold}
+.soft-controls{position:absolute;bottom:15px;left:20px;right:20px;display:none;justify-content:space-between;align-items:center}
+.caps-indicator{position:absolute;top:50px;right:14px;font-size:10px;font-weight:bold;color:#1a1a0e;display:none;border:1px solid #1a1a0e;padding:1px 3px;line-height:1}
+.hold-ring{position:relative;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;-webkit-tap-highlight-color:transparent;user-select:none}
+.hold-ring svg{position:absolute;inset:0;width:100%;height:100%;transform:rotate(-90deg);pointer-events:none}
+.hold-ring circle{fill:none;stroke:#1a1a0e;stroke-width:2.5;stroke-dasharray:88;stroke-dashoffset:88}
+.hold-ring.pressing circle{transition:stroke-dashoffset 5s linear;stroke-dashoffset:0}
+.center-box{width:16px;height:16px;background:#1a1a0e}
+.arrow-btn{font-size:28px;font-weight:900;color:#1a1a0e;line-height:1}
+
+@keyframes resetFlash{0%,100%{background:#b8c2a0}50%{background:#8a9070}}
+.lcd.resetting{animation:resetFlash .3s ease 3}
+</style>
+</head>
+<body>
+<div class="skin">
+<div class="device-label">Gnoke MiFi</div>
+<div class="lcd-shell">
+<div class="lcd" id="lcd">
+  <div class="boot-screen" id="boot">
+    <div class="boot-word" id="w1">POWERED</div>
+    <div class="boot-word hidden" id="w2">BY</div>
+    <div class="boot-word hidden" id="w3">GNOKE</div>
+    <div class="boot-dots"><div class="dot"></div><div class="dot" style="animation-delay:.3s"></div><div class="dot" style="animation-delay:.6s"></div></div>
+  </div>
+  <div class="main-screen" id="main">
+    <div class="status-row">
+      <div class="icon-group"><div class="sig-bars"><div class="bar" style="height:5px"></div><div class="bar" style="height:8px"></div><div class="bar" style="height:11px"></div></div><div style="font-size:11px;font-weight:bold;">4G+</div></div>
+      <div class="users-count">3 Users</div>
+      <div class="battery-shell"><div class="battery-fill"></div></div>
+    </div>
+    <div class="brand-title">Gnoke</div>
+    <div class="usage-row">DATA: 4.2 GB</div>
+  </div>
+  <div class="settings-screen" id="settings">
+    <div class="settings-toolbar" id="settings-toolbar">
+      <div class="toolbar-btn" id="homeBtn" title="Home">
+        <svg viewBox="0 0 28 28" xmlns="http://www.w3.org/2000/svg"><circle cx="14" cy="14" r="12" id="homeRingCirc"/></svg>
+        <span style="position:relative;z-index:1">⌂</span>
+      </div>
+      <span class="toolbar-label">SETTINGS</span>
+      <div class="toolbar-btn" id="resetBtn" title="Hold 5s to reset">
+        <svg viewBox="0 0 28 28" xmlns="http://www.w3.org/2000/svg"><circle cx="14" cy="14" r="12" id="resetRingCirc"/></svg>
+        <span style="position:relative;z-index:1;font-size:13px">↺</span>
+      </div>
+    </div>
+    <div class="settings-content">
+      <div id="c1"><h3 id="h1">SSID</h3><input type="text" id="i1" value="Gnoke_5G_A1"></div>
+      <div id="c2"><h3 id="h2">Password</h3><input type="password" id="i2" value="12345678"></div>
+      <div id="c3"><h3 id="h3">Band</h3><select id="i3"><option>2.4 GHz</option><option selected>5 GHz</option></select></div>
+    </div>
+    <div class="caps-indicator" id="capsIndicator">ABC</div>
+    <div id="t9-container" style="display:none">
+        <div class="t9-pad">
+            <div class="t9-btn" onclick="t9(1)">1</div><div class="t9-btn" onclick="t9(2)">2 ABC</div><div class="t9-btn" onclick="t9(3)">3 DEF</div>
+            <div class="t9-btn" onclick="t9(4)">4 GHI</div><div class="t9-btn" onclick="t9(5)">5 JKL</div><div class="t9-btn" onclick="t9(6)">6 MNO</div>
+            <div class="t9-btn" onclick="t9(7)">7 PQRS</div><div class="t9-btn" onclick="t9(8)">8 TUV</div><div class="t9-btn" onclick="t9(9)">9 WXYZ</div>
+            <div class="t9-btn" onclick="toggleCaps()">* ⇧</div><div class="t9-btn" onclick="t9(0)">0</div><div class="t9-btn" onclick="del()">DEL</div>
+        </div>
+    </div>
+  </div>
+  <div class="soft-controls" id="softControls">
+    <div class="hold-ring" id="btnLeft">
+      <span class="arrow-btn">◀</span>
+    </div>
+    <div class="hold-ring" id="menuBtn">
+      <div class="center-box"></div>
+    </div>
+    <div class="hold-ring" id="btnRight" style="cursor:pointer">
+      <span class="arrow-btn">▶</span>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+<script>
+const DEFAULTS = { ssid: 'Gnoke_5G_A1', password: '12345678', band: 1 };
+
+// --- toolbar helper ---
+function setToolbar(visible){
+  document.getElementById('settings-toolbar').classList.toggle('hidden-toolbar', !visible);
+}
+
+setTimeout(()=>{document.getElementById('w2').style.display='block'},1200);
+setTimeout(()=>{document.getElementById('w3').style.display='block'},2400);
+setTimeout(()=>{ bootComplete(); },6000);
+
+function bootComplete() {
+    document.getElementById('boot').style.display='none';
+    document.getElementById('main').style.display='block';
+    document.getElementById('softControls').style.display='flex';
+    document.getElementById('btnLeft').style.visibility = 'hidden';
+    document.getElementById('btnRight').style.visibility = 'hidden';
+}
+
+function doReboot() {
+    document.getElementById('i1').value = DEFAULTS.ssid;
+    document.getElementById('i2').value = DEFAULTS.password;
+    document.getElementById('i2').type = 'password';
+    document.getElementById('i3').selectedIndex = DEFAULTS.band;
+    document.getElementById('main').style.display = 'none';
+    document.getElementById('settings').style.display = 'none';
+    document.getElementById('softControls').style.display = 'none';
+    document.getElementById('capsIndicator').style.display = 'none';
+    document.getElementById('t9-container').style.display = 'none';
+    isSettings = false; isEditMode = false; idx = 0;
+    commitPending();
+    setToolbar(true);
+    const lcd = document.getElementById('lcd');
+    lcd.classList.add('resetting');
+    setTimeout(() => lcd.classList.remove('resetting'), 900);
+    const boot = document.getElementById('boot');
+    boot.style.display = 'flex';
+    document.getElementById('w2').style.display = 'none';
+    document.getElementById('w3').style.display = 'none';
+    setTimeout(()=>{document.getElementById('w2').style.display='block'},1200);
+    setTimeout(()=>{document.getElementById('w3').style.display='block'},2400);
+    setTimeout(()=>{ boot.style.display='none'; bootComplete(); },6000);
+}
+
+let isSettings = false, isEditMode = false, idx = 0;
+let lastBtn = null, charIdx = 0, cursorPos = 0;
+let commitTimer = null;
+let capsLock = true;
+const containers = ['c1', 'c2', 'c3'], fields = ['i1', 'i2', 'i3'];
+const map = { 1: '1@_-?#', 2: 'ABC', 3: 'DEF', 4: 'GHI', 5: 'JKL', 6: 'MNO', 7: 'PQRS', 8: 'TUV', 9: 'WXYZ', 0: '0 ' };
+
+function toggleCaps() {
+    commitPending();
+    capsLock = !capsLock;
+    const ind = document.getElementById('capsIndicator');
+    ind.textContent = capsLock ? 'ABC' : 'abc';
+    ind.style.background = capsLock ? 'transparent' : '#2f3f28';
+    ind.style.color = capsLock ? '#1a1a0e' : '#b8c2a0';
+}
+
+function applyCase(ch) {
+    if (/[a-zA-Z]/.test(ch)) return capsLock ? ch.toUpperCase() : ch.toLowerCase();
+    return ch;
+}
+
+function commitPending() {
+    clearTimeout(commitTimer);
+    commitTimer = null;
+    lastBtn = null;
+    charIdx = 0;
+}
+
+function t9(key) {
+    const input = document.querySelector('input.active');
+    if (!input) return;
+    const val = input.value;
+    if (key == lastBtn && map[key] && commitTimer !== null) {
+        clearTimeout(commitTimer);
+        charIdx = (charIdx + 1) % map[key].length;
+        input.value = val.slice(0, cursorPos - 1) + applyCase(map[key][charIdx]) + val.slice(cursorPos);
+    } else {
+        commitPending();
+        const ch = applyCase(map[key] ? map[key][0] : String(key));
+        input.value = val.slice(0, cursorPos) + ch + val.slice(cursorPos);
+        cursorPos++;
+        lastBtn = key;
+        charIdx = 0;
+    }
+    if (map[key]) {
+        commitTimer = setTimeout(() => { commitPending(); }, 1000);
+    }
+}
+
+function del() {
+    const input = document.querySelector('input.active');
+    if (!input || cursorPos === 0) return;
+    commitPending();
+    const val = input.value;
+    input.value = val.slice(0, cursorPos - 1) + val.slice(cursorPos);
+    cursorPos--;
+}
+
+function moveCursor(dir) {
+    const input = document.querySelector('input.active');
+    if (!input) return;
+    commitPending();
+    cursorPos = Math.max(0, Math.min(input.value.length, cursorPos + dir));
+}
+
+const leftBtn = document.getElementById('btnLeft'), rightBtn = document.getElementById('btnRight'), menuBtn = document.getElementById('menuBtn');
+
+leftBtn.addEventListener('click', () => { if (isEditMode) moveCursor(-1); else nav(-1); });
+menuBtn.addEventListener('click', () => handleCenterBtn());
+rightBtn.addEventListener('click', () => { if (isEditMode) moveCursor(1); else nav(1); });
+
+const homeBtn = document.getElementById('homeBtn');
+const homeRingCirc = document.getElementById('homeRingCirc');
+bindHoldToolbar(homeBtn, homeRingCirc, () => goBack(), () => goBack());
+
+const resetBtn = document.getElementById('resetBtn');
+const resetRingCirc = document.getElementById('resetRingCirc');
+bindHoldToolbar(resetBtn, resetRingCirc, () => {}, () => doReboot());
+
+function bindHoldToolbar(el, circ, onShort, onLong) {
+    let fired = false, timer = null;
+    function down(e) {
+        e.preventDefault(); fired = false;
+        el.classList.add('pressing');
+        void circ.getBoundingClientRect();
+        circ.style.transition = 'stroke-dashoffset 5s linear';
+        circ.style.strokeDashoffset = '0';
+        timer = setTimeout(() => { fired = true; stopToolbarRing(el, circ); onLong(); }, 5000);
+    }
+    function up() { clearTimeout(timer); stopToolbarRing(el, circ); if (!fired) onShort(); fired = false; }
+    function cancel() { clearTimeout(timer); stopToolbarRing(el, circ); fired = false; }
+    el.addEventListener('touchstart', down, { passive: false }); el.addEventListener('touchend', up);
+    el.addEventListener('touchcancel', cancel); el.addEventListener('mousedown', down);
+    el.addEventListener('mouseup', up); el.addEventListener('mouseleave', cancel);
+}
+function stopToolbarRing(el, circ) {
+    el.classList.remove('pressing');
+    circ.style.transition = 'none';
+    circ.style.strokeDashoffset = '76';
+}
+
+function goBack() {
+    isSettings = false; isEditMode = false; idx = 0;
+    commitPending();
+    document.getElementById('main').style.display = 'block';
+    document.getElementById('settings').style.display = 'none';
+    document.getElementById('i2').type = 'password';
+    document.getElementById('capsIndicator').style.display = 'none';
+    document.getElementById('t9-container').style.display = 'none';
+    document.getElementById('btnLeft').style.visibility = 'hidden';
+    document.getElementById('btnRight').style.visibility = 'hidden';
+    setToolbar(true); // reset for next time settings opens
+}
+
+
+function updateView() {
+    fields.forEach((f, i) => {
+        document.getElementById(f).classList.toggle('active', i === idx);
+        document.getElementById('h'+(i+1)).classList.toggle('active', i === idx);
+    });
+    containers.forEach((c, i) => {
+        document.getElementById(c).style.display = (!isEditMode || i === idx) ? 'block' : 'none';
+    });
+    const showT9 = isEditMode && (idx === 0 || idx === 1);
+    document.getElementById('t9-container').style.display = showT9 ? 'block' : 'none';
+    document.getElementById('btnLeft').style.visibility = 'visible';
+    document.getElementById('btnRight').style.visibility = 'visible';
+
+    // hide toolbar when editing, show when browsing settings
+    setToolbar(!isEditMode);
+}
+
+function handleCenterBtn() {
+    if (!isSettings) {
+        isSettings = true;
+        document.getElementById('main').style.display = 'none';
+        document.getElementById('settings').style.display = 'block';
+        updateView();
+    } else if (!isEditMode) {
+        if (idx === 2) {
+            const el = document.getElementById('i3');
+            el.selectedIndex = (el.selectedIndex + 1) % 2;
+        } else {
+            isEditMode = true;
+            if (idx === 1) document.getElementById('i2').type = 'text';
+            cursorPos = document.getElementById(fields[idx]).value.length;
+            lastBtn = null; charIdx = 0;
+            const ind = document.getElementById('capsIndicator');
+            ind.style.display = 'block';
+            ind.textContent = capsLock ? 'ABC' : 'abc';
+            updateView(); // hides toolbar
+        }
+    } else {
+        isEditMode = false;
+        commitPending();
+        if (idx === 1) document.getElementById('i2').type = 'password';
+        document.getElementById('capsIndicator').style.display = 'none';
+        updateView(); // shows toolbar again
+    }
+}
+
+function nav(dir) {
+    if (!isSettings || isEditMode) return;
+    idx = (idx + dir + fields.length) % fields.length;
+    updateView();
+}
+</script>
+</body>
+</html>
