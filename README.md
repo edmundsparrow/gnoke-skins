@@ -26,4 +26,4 @@ Your device broadcasts state as JSON. `config.js` maps the keys. The skin render
 
 ## Licence
 
-MIT BSL
+MIT
